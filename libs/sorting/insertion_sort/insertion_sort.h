@@ -31,9 +31,12 @@
  * - `0` if `key1 == key2`
  * - `-1` if `key1 > key2`
  *
+ * @return 0 on success, -1 on failure (e.g., invalid input data).
+ *
  * When the function returns, `data` contains the elements sorted in the specified order.
  *
- * @complexity Best case: O(n), Average and Worst case: O(n^2).
+ * @complexity Time: Best case O(n), Average/Worst case O(n^2).
+ * @space O(1) — sorting is done in-place using constant auxiliary memory.
  */
 
 int dsa_issort(
