@@ -10,4 +10,3 @@ target_include_directories(insertion_sort_algo
 target_link_libraries(insertion_sort_algo
     PRIVATE
         build_flags)
-

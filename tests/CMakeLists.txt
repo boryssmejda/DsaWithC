@@ -9,4 +9,3 @@ target_link_libraries(ut
         insertion_sort_algo
         Catch2::Catch2WithMain
 )
-

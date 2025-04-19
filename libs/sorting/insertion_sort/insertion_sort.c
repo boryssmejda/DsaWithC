@@ -25,25 +25,25 @@ int dsa_issort(
     }
 
     // Repeatedly insert a key element among the sorted elements.
-    for (size_t j = 1; j < size; j++)
+    for (size_t current_position = 1; current_position < size; current_position++)
     {
-        memcpy(key, &arr[j * esize], esize);
+        memcpy(key, &arr[current_position * esize], esize);
 
-        ptrdiff_t i = (ptrdiff_t) j - 1;
+        ptrdiff_t insert_position = (ptrdiff_t) current_position - 1;
 
         // Determine the position at which to insert the key element.
-        while (i >= 0 && compare(&arr[(size_t) i * esize], key) > 0)
+        while (insert_position >= 0 && compare(&arr[(size_t) insert_position * esize], key) > 0)
         {
-            void* source = &arr[(size_t) i * esize];
-            void* dest = &arr[(size_t)(i + 1) * esize];
+            void* source = &arr[(size_t) insert_position * esize];
+            void* destination = &arr[(size_t)(insert_position + 1) * esize];
 
             // Shift element to the right
-            memcpy(dest, source, esize);
-            --i;
+            memcpy(destination, source, esize);
+            --insert_position;
         }
 
         // Insert the key at the correct position
-        memcpy(&arr[(size_t)(i + 1) * esize], key, esize);
+        memcpy(&arr[(size_t)(insert_position + 1) * esize], key, esize);
     }
 
     free(key);
