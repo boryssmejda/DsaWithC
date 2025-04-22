@@ -17,10 +17,29 @@ int compare_ints_ascending(const void* first, const void* second)
 
 int compare_ints_descending(const void* first, const void* second)
 {
-    const int a = *(const int*)first;
-    const int b = *(const int*)second;
+    const int a = *(const int*) first;
+    const int b = *(const int*) second;
 
     return (b > a) - (b < a);
+}
+
+struct CharWithIndex
+{
+    char ch;
+    int index;
+};
+
+bool operator==(const CharWithIndex& lhs, const CharWithIndex& rhs)
+{
+    return lhs.ch == rhs.ch && lhs.index == rhs.index;
+}
+
+int compare_char_with_index_ascending(const void* first, const void* second)
+{
+    const CharWithIndex* lhs = (const CharWithIndex*) first;
+    const CharWithIndex* rhs = (const CharWithIndex*) second;
+
+    return (lhs->ch > rhs->ch) - (lhs->ch < rhs->ch);
 }
 
 TEST_CASE("Insertion sort handles nullptr array", "[InsertionSort]")
@@ -115,4 +134,27 @@ TEST_CASE("Insertion sort does not change sorted array in descending order", "[I
     REQUIRE(intArr == expectedArray);
 }
 
-// test that algorithm is stable.
+TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort]")
+{
+    const CharWithIndex a{.ch = 'a', .index = 2};
+    const CharWithIndex b{.ch = 'b', .index = 2};
+    const CharWithIndex c{.ch = 'c', .index = 2};
+
+    const CharWithIndex aa{.ch = 'a', .index = 1};
+    const CharWithIndex bb{.ch = 'b', .index = 1};
+    const CharWithIndex cc{.ch = 'c', .index = 1};
+
+    const CharWithIndex aaa{.ch = 'a', .index = 0};
+    const CharWithIndex bbb{.ch = 'b', .index = 0};
+    const CharWithIndex ccc{.ch = 'c', .index = 0};
+
+
+    std::array<CharWithIndex, 9> inputArr{a, b, c, aa, bb, cc, aaa, bbb, ccc};
+    const size_t size = inputArr.size();
+    const size_t esize = sizeof(inputArr[0]);
+    int (*compare)(const void*, const void*) = compare_char_with_index_ascending;
+    std::array<CharWithIndex, 9> expectedArr{a, aa, aaa, b, bb, bbb, c, cc, ccc};
+
+    REQUIRE(dsa_issort(static_cast<void*>(inputArr.data()), size, esize, compare) == 0);
+    REQUIRE(inputArr == expectedArr);
+}
