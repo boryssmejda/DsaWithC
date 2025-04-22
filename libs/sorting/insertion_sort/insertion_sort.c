@@ -9,7 +9,7 @@ int dsa_issort(
     const size_t esize,
     int (*compare)(const void* key1, const void* key2))
 {
-    if (!data || !compare)
+    if (!data || !compare || esize == 0)
     {
         return -1;
     }
