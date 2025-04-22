@@ -1,6 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
+#include <algorithm>
 #include <array>
+#include <cstdint>
 
 extern "C"
 {
@@ -157,4 +160,38 @@ TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort]")
 
     REQUIRE(dsa_issort(static_cast<void*>(inputArr.data()), size, esize, compare) == 0);
     REQUIRE(inputArr == expectedArr);
+}
+
+TEMPLATE_TEST_CASE("Insertion sort works for numeric signed types",
+                    "[InsertionSort][template]",
+                    int8_t, int16_t, int32_t, int64_t, float, double)
+{
+    using T = TestType;
+    std::array<T, 9> inputArr{T{4}, T{1}, T{5}, T{3}, T{2}, T{-1}, T{-2}, T{-3}, T{0}};
+    const size_t size = inputArr.size();
+    const size_t esize = sizeof(inputArr[0]);
+
+    SECTION("Sort in ascending order")
+    {
+        const auto compare = [](const void* a, const void* b) -> int {
+            const T* lhs = (const T*)a;
+            const T* rhs = (const T*)b;
+            return (*lhs > *rhs) - (*lhs < *rhs);
+        };
+
+        REQUIRE(dsa_issort(static_cast<void*>(inputArr.data()), size, esize, compare) == 0);
+        REQUIRE(std::is_sorted(inputArr.begin(), inputArr.end()));
+    }
+
+    SECTION("Sort in descending order")
+    {
+        const auto compare = [](const void* a, const void* b) -> int {
+            const T* lhs = (const T*)a;
+            const T* rhs = (const T*)b;
+
+            return (*rhs > *lhs) - (*rhs < *lhs);
+        };
+        REQUIRE(dsa_issort(static_cast<void*>(inputArr.data()), size, esize, compare) == 0);
+        REQUIRE(std::is_sorted(inputArr.begin(), inputArr.end(), std::greater<>()));
+    }
 }
