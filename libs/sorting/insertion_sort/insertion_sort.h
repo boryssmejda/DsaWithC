@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 /*
  * @brief Sorts array of elements using insertion sort.
  *
@@ -35,13 +37,15 @@
  *
  * When the function returns, `data` contains the elements sorted in the specified order.
  *
+ * @note This is a stable sort algorithm: equal elements retain their original order.
+ *
  * @complexity Time: Best case O(n), Average/Worst case O(n^2).
  * @space O(1) — sorting is done in-place using constant auxiliary memory.
  */
 
 int dsa_issort(
     void *data,
-    const int size,
-    const int esize,
+    const size_t size,
+    const size_t esize,
     int (*compare)(const void *key1, const void *key2));
 
