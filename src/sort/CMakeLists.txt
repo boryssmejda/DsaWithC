@@ -8,7 +8,7 @@ target_include_directories(sort PUBLIC
 )
 
 target_link_libraries(sort PRIVATE
-    dsa_build_flags
+    dsa::build_flags
 )
 
 add_library(dsa::sort ALIAS sort)
