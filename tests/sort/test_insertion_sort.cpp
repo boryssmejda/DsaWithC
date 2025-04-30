@@ -1,5 +1,5 @@
-#include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
 #include <array>
@@ -10,7 +10,7 @@
 
 extern "C"
 {
-#include "insertion_sort.h"
+#include "dsa/sort/insertion_sort.h"
 }
 
 struct CharWithIndex

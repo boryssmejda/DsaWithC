@@ -1,4 +1,5 @@
 add_library(build_flags INTERFACE)
+add_library(dsa::build_flags ALIAS build_flags)
 
 target_compile_features(build_flags
     INTERFACE
