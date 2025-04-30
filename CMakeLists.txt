@@ -6,6 +6,6 @@ project(DsaWithC
 
 include(${CMAKE_SOURCE_DIR}/cmake/ProjectBuildFlags.cmake)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/libs)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
 

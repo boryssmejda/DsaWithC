@@ -1,5 +1,7 @@
 find_package(Catch2 REQUIRED)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sorting)
+
 add_executable(ut
     sorting/test_insertion_sort.cpp
 )
