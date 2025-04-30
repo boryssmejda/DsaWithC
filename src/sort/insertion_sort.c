@@ -1,4 +1,4 @@
-#include "insertion_sort.h"
+#include "dsa/sort/insertion_sort.h"
 
 #include <stdlib.h>
 #include <string.h>
