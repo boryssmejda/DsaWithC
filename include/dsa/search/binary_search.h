@@ -27,7 +27,7 @@
  * @complexity Time complexity: O(log n), where n is the number of elements.
  */
 
-size_t bisearch(
+size_t dsa_binary_search(
     const void *sorted,
     const void *target,
     const size_t size,
