@@ -1,4 +1,4 @@
-#include "binary_search.h"
+#include "dsa/search/binary_search.h"
 
 size_t dsa_binary_search(
     const void *sorted,
@@ -13,10 +13,10 @@ size_t dsa_binary_search(
     }
 
     size_t left = 0;
-    size_t right = size - 1;
+    size_t right = size;
     const char* sortedArr = sorted;
 
-    while (left <= right)
+    while (left < right)
     {
         const size_t middle = left + (right - left) / 2;
 
@@ -26,7 +26,7 @@ size_t dsa_binary_search(
                 left = middle + 1;
                 break;
             case 1:
-                right = middle - 1;
+                right = middle;
                 break;
             case 0:
                 return middle;
