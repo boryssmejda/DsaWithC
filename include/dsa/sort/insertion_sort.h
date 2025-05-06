@@ -2,45 +2,42 @@
 
 #include <stddef.h>
 
-/*
- * @brief Sorts array of elements using insertion sort.
+/**
+ * @brief Sorts an array of elements using insertion sort.
  *
- * Uses insertion sort to sort the array of elements in *data*.
- * The number of elements in *data* is specified by *size*.
- * The size of each element is specified by *esize*.
- * The function pointer *compare* specifies a user-defined
+ * Uses insertion sort to sort the array of elements in @p data.
+ * The number of elements is specified by @p size.
+ * The size of each element is given by @p esize.
+ * The function pointer @p compare specifies a user-defined
  * function to compare elements.
- * This function should return 1 if *key1* > *key2*, 0 if *key1* == *key2*,
- * and –1 if *key1* < *key2* for an ascending sort.
- * For a descending sort, compare should reverse the cases returning 1 and –1.
  *
- * @param[in, out] data Array of elements to sort.
- * @param[in] size Number of elements in *data*
- * @param[in] esize Size of a single element.
- * @param[in] compare User-defined function to compare elements and determine their order.
- *
- * * The comparison function must follow the signature:
- * ```
+ * The comparison function must follow the signature:
+ * @code
  * int compare(const void* key1, const void* key2);
- * ```
+ * @endcode
  * and return:
- * - `1` if `key1 > key2`
- * - `0` if `key1 == key2`
- * - `-1` if `key1 < key2`
+ * - `1` if @p key1 is greater than @p key2
+ * - `0` if @p key1 is equal to @p key2
+ * - `-1` if @p key1 is less than @p key2
  *
- * For a descending sort, the `compare` function should return:
- * - `1` if `key1 < key2`
- * - `0` if `key1 == key2`
- * - `-1` if `key1 > key2`
+ * For a descending sort, @p compare should reverse the first and last cases:
+ * - `1` if @p key1 is less than @p key2
+ * - `0` if @p key1 is equal to @p key2
+ * - `-1` if @p key1 is greater than @p key2
  *
- * @return 0 on success, -1 on failure (e.g., invalid input data).
+ * @param[in,out] data Array of elements to sort.
+ * @param[in] size Number of elements in @p data.
+ * @param[in] esize Size of a single element, in bytes.
+ * @param[in] compare Comparison function used to determine order.
  *
- * When the function returns, `data` contains the elements sorted in the specified order.
+ * @return 0 on success, -1 on failure (e.g., invalid input).
  *
- * @note This is a stable sort algorithm: equal elements retain their original order.
+ * When the function returns, @p data contains the sorted elements.
  *
- * @complexity Time: Best case O(n), Average/Worst case O(n^2).
- * @space O(1) — sorting is done in-place using constant auxiliary memory.
+ * @note This is a stable sort: equal elements retain their original order.
+ *
+ * @complexity Time: Best case O(n); Average/Worst case O(n²).
+ * Space: O(1) — sorting is done in-place using constant auxiliary memory.
  */
 
 int dsa_issort(
@@ -48,4 +45,3 @@ int dsa_issort(
     const size_t size,
     const size_t esize,
     int (*compare)(const void *key1, const void *key2));
-
