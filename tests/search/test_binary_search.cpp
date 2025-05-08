@@ -57,7 +57,7 @@ TEST_CASE("Binary search test", "[BinarySearch]")
         REQUIRE(arr.size() == 1);
 
         const int target = 0;
-        const auto mismatchedSize = 0zu;
+        const auto mismatchedSize = 0uz;
         const auto result = dsa_binary_search(
             arr.data(), &target, mismatchedSize, esize, ascending_compare<int>
         );
@@ -123,8 +123,8 @@ TEST_CASE("Binary search test", "[BinarySearch]")
         const size_t expectedHighIndex = arr.size() - 1;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<int>);
 
-        REQUIRE(result >= expectedLowIndex);
-        REQUIRE(result <= expectedHighIndex);
+        // Allow any index between expectedLowIndex and expectedHighIndex (inclusive)
+        REQUIRE((result >= expectedLowIndex && result <= expectedHighIndex));
     }
 
     SECTION("Array is sorted in ascending order and target value is not in array")
@@ -155,8 +155,8 @@ TEST_CASE("Binary search test", "[BinarySearch]")
         const size_t expectedHighIndex = arr.size() - 1;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<int>);
 
-        REQUIRE(result >= expectedLowIndex);
-        REQUIRE(result <= expectedHighIndex);
+        // Allow any index between expectedLowIndex and expectedHighIndex (inclusive)
+        REQUIRE((result >= expectedLowIndex && result <= expectedHighIndex));
     }
 
     SECTION("Array is sorted in decreasing order and target value is not in array")
@@ -165,5 +165,15 @@ TEST_CASE("Binary search test", "[BinarySearch]")
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<int>);
 
         REQUIRE(result == arr.size());
+    }
+
+    SECTION("Array with all elements equal to target")
+    {
+        arr.assign(10, 7);
+        const int target = 7;
+        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<int>);
+
+        REQUIRE(result < arr.size());
+        REQUIRE(arr[result] == target);
     }
 }
