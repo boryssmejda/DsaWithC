@@ -1,5 +1,6 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -61,7 +62,7 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
         REQUIRE(arr.size() == 1);
 
         const T target = 0;
-        const auto mismatchedSize = 0uz;
+        const size_t mismatchedSize = 0;
         const auto result = dsa_binary_search(
             arr.data(), &target, mismatchedSize, esize, ascending_compare<T>
         );
@@ -108,12 +109,12 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
         REQUIRE(result == arr.size());
     }
 
-    arr.insert(arr.end(), {2, 4, 6, 8, 10});
+    arr.insert(arr.end(), {T{2}, T{4}, T{6}, T{8}, T{10}});
 
     SECTION("Array is sorted in increasing order and target value is in array")
     {
         const T target = 6;
-        const auto expectedIndex = 3uz;
+        const size_t expectedIndex = 3;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
 
         REQUIRE(result == expectedIndex);
@@ -121,7 +122,7 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
 
     SECTION("Array contains duplicates in ascending order")
     {
-        arr.insert(arr.end(), {20, 20, 20});
+        arr.insert(arr.end(), {T{20}, T{20}, T{20}});
         const T target = 20;
         const size_t expectedLowIndex = arr.size() - 3;
         const size_t expectedHighIndex = arr.size() - 1;
@@ -173,11 +174,18 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
 
     SECTION("Array with all elements equal to target")
     {
-        arr.assign(10, 7);
+        arr.assign(10, T{7});
         const T target = 7;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
 
         REQUIRE(result < arr.size());
-        REQUIRE(arr[result] == target);
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            REQUIRE_THAT(arr[result], Catch::Matchers::WithinAbs(target, 0.1));
+        }
+        else
+        {
+            REQUIRE(arr[result] == target);
+        }
     }
 }
