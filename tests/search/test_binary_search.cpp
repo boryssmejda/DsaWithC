@@ -50,7 +50,7 @@ TEST_CASE("Binary search test", "[BinarySearch]")
         REQUIRE(result == arr.size());
     }
 
-    arr.push_back(0);
+    arr.push_back(1);
 
     SECTION("Mismatch in array size")
     {
@@ -86,7 +86,7 @@ TEST_CASE("Binary search test", "[BinarySearch]")
     {
         REQUIRE(arr.size() == 1);
 
-        const int target = 0;
+        const int target = 1;
         const auto result = dsa_binary_search(
             arr.data(), &target, arr.size(), esize, ascending_compare<int>
         );
@@ -115,7 +115,19 @@ TEST_CASE("Binary search test", "[BinarySearch]")
         REQUIRE(result == expectedIndex);
     }
 
-    SECTION("Array is sorted in increasing order and target value is not in array")
+    SECTION("Array contains duplicates in ascending order")
+    {
+        arr.insert(arr.end(), {20, 20, 20});
+        const int target = 20;
+        const size_t expectedLowIndex = arr.size() - 3;
+        const size_t expectedHighIndex = arr.size() - 1;
+        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<int>);
+
+        REQUIRE(result >= expectedLowIndex);
+        REQUIRE(result <= expectedHighIndex);
+    }
+
+    SECTION("Array is sorted in ascending order and target value is not in array")
     {
         const int target = 3;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<int>);
@@ -127,11 +139,24 @@ TEST_CASE("Binary search test", "[BinarySearch]")
 
     SECTION("Array is sorted in decreasing order and target value is in array")
     {
-        const int target = 0;
-        const size_t expectedIndex = arr.size() - 1;
+        const int target = 2;
+        const size_t expectedIndex = arr.size() - 2;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<int>);
 
         REQUIRE(expectedIndex == result);
+    }
+
+    SECTION("Array contains duplicates in descending order")
+    {
+        arr.insert(arr.end(), {0, 0, 0, 0});
+
+        const int target = 0;
+        const size_t expectedLowIndex = arr.size() - 4;
+        const size_t expectedHighIndex = arr.size() - 1;
+        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<int>);
+
+        REQUIRE(result >= expectedLowIndex);
+        REQUIRE(result <= expectedHighIndex);
     }
 
     SECTION("Array is sorted in decreasing order and target value is not in array")
