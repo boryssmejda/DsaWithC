@@ -32,7 +32,7 @@ int compare_char_with_index_ascending(const void* first, const void* second)
     return (lhs->ch > rhs->ch) - (lhs->ch < rhs->ch);
 }
 
-TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort]")
+TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort][ComplexType]")
 {
     const CharWithIndex a{.ch = 'a', .index = 2};
     const CharWithIndex b{.ch = 'b', .index = 2};
@@ -56,6 +56,8 @@ TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort]")
     REQUIRE(dsa_issort(inputArr.data(), size, esize, compare) == 0);
     REQUIRE(inputArr == expectedArr);
 }
+
+// TODO: add testcase for sorting const char* using std::strcmp
 
 template <typename T>
 int ascending_compare(const void* a, const void* b)

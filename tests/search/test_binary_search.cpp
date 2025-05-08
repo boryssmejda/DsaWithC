@@ -3,6 +3,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include <algorithm>
+#include <cstring>
 #include <vector>
 
 extern "C"
@@ -26,6 +27,24 @@ int descending_compare(const void* a, const void* b)
     const T* rhs = static_cast<const T*>(b);
 
     return (*rhs > *lhs) - (*rhs < *lhs);
+}
+
+int compare_strings_ascending(const void* a, const void* b)
+{
+    const char *lhs = *static_cast<const char* const*>(a);
+    const char *rhs = *static_cast<const char* const*>(b);
+    const int result = std::strcmp(lhs, rhs);
+
+    return (result > 0) - (result < 0);
+}
+
+int compare_strings_descending(const void* a, const void* b)
+{
+    const char *lhs = *static_cast<const char* const*>(a);
+    const char *rhs = *static_cast<const char* const*>(b);
+    const int result = std::strcmp(lhs, rhs);
+
+    return (result < 0) - (result > 0);
 }
 
 TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
@@ -187,5 +206,59 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
         {
             REQUIRE(arr[result] == target);
         }
+    }
+}
+
+TEST_CASE("Binary search with const char*", "[BinarySearch][CString]")
+{
+    std::vector<const char*> sorted{
+        "apple", "banana", "cherry", "date", "fig", "grape", "kiwi"
+    };
+
+    const size_t size = sorted.size();
+    const size_t esize = sizeof(const char*);
+
+    SECTION("Target found in array sorted in ascending order")
+    {
+        const char* target = "cherry";
+        const size_t expectedIndex = 2;
+
+        const auto result = dsa_binary_search(
+            sorted.data(), &target, size, esize, compare_strings_ascending);
+
+        REQUIRE(result == expectedIndex);
+    }
+
+    SECTION("Target found in array sorted in descending order")
+    {
+        std::ranges::reverse(sorted);
+        const char* target = "banana";
+        const size_t expectedIndex = 5;
+        const size_t result = dsa_binary_search(sorted.data(), &target, size, esize, compare_strings_descending);
+
+        REQUIRE(result == expectedIndex);
+    }
+
+    SECTION("Target not found")
+    {
+        const char* target = "blueberry";
+
+        const auto result = dsa_binary_search(
+            sorted.data(), &target, size, esize, compare_strings_ascending);
+
+        REQUIRE(result == size);
+    }
+
+    SECTION("All elements are the same")
+    {
+        const std::vector<const char*> repeated{"hello", "hello", "hello", "hello"};
+        const size_t repeatedSize = repeated.size();
+        const char* target = "hello";
+
+        const auto result = dsa_binary_search(
+            repeated.data(), &target, repeatedSize, esize, compare_strings_ascending);
+
+        REQUIRE(result < repeatedSize);
+        REQUIRE(std::strcmp(repeated[result], target) == 0);
     }
 }
