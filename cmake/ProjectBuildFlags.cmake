@@ -20,4 +20,3 @@ target_compile_options(build_flags
         -Wdouble-promotion
         -Wformat=2
         -Wimplicit-fallthrough)
-
