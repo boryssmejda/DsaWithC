@@ -58,8 +58,6 @@ TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort][C
     REQUIRE(inputArr == expectedArr);
 }
 
-// TODO: add testcase for sorting const char* using std::strcmp
-
 template <typename T>
 int ascending_compare(const void* a, const void* b)
 {
