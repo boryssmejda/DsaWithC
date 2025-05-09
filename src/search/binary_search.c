@@ -20,7 +20,7 @@ size_t dsa_binary_search(
     {
         const size_t middle = left + (right - left) / 2;
 
-        switch(compare((const void*) &sortedArr[middle * esize], target))
+        switch(compare(&sortedArr[middle * esize], target))
         {
             case -1:
                 left = middle + 1;
