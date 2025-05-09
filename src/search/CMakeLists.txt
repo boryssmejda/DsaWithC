@@ -1,10 +1,9 @@
-add_library(search
+add_library(search STATIC
     binary_search.c
 )
 
 target_include_directories(search PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
-    $<INSTALL_INTERFACE:include/>
 )
 
 target_link_libraries(search PRIVATE
