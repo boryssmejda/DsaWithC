@@ -262,8 +262,3 @@ TEST_CASE("Binary search with const char*", "[BinarySearch][CString]")
         REQUIRE(std::strcmp(repeated[result], target) == 0);
     }
 }
-
-TEST_CASE("Binary search in a complex type", "[BinarySearch][ComplexType]")
-{
-
-}
