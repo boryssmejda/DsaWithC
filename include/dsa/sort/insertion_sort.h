@@ -40,7 +40,7 @@
  * Space: O(1) — sorting is done in-place using constant auxiliary memory.
  */
 
-int dsa_issort(
+bool dsa_issort(
     void *data,
     const size_t size,
     const size_t esize,
