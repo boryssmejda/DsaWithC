@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-bool lsqe(const double *x, const double *y, const size_t size, double *a, double *b)
+bool dsa_lsqe(const double *x, const double *y, const size_t size, double *a, double *b)
 {
     if (!x || !y || size < 2 || !a || !b)
     {
