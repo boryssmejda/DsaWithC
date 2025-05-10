@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int dsa_issort(
+bool dsa_issort(
     void* data,
     const size_t size,
     const size_t esize,
@@ -11,7 +11,7 @@ int dsa_issort(
 {
     if (!data || !compare || esize == 0)
     {
-        return -1;
+        return false;
     }
 
     char* arr = data;
@@ -21,7 +21,7 @@ int dsa_issort(
 
     if (!key)
     {
-        return -1;
+        return false;
     }
 
     // Repeatedly insert a key element among the sorted elements.
@@ -47,5 +47,5 @@ int dsa_issort(
     }
 
     free(key);
-    return 0;
+    return true;
 }

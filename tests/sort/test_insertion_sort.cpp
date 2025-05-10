@@ -54,7 +54,7 @@ TEST_CASE("Insertion sort preserves order of equal elements", "[InsertionSort][C
     int (*compare)(const void*, const void*) = compare_char_with_index_ascending;
     std::vector<CharWithIndex> expectedArr{a, aa, aaa, b, bb, bbb, c, cc, ccc};
 
-    REQUIRE(dsa_issort(inputArr.data(), size, esize, compare) == 0);
+    REQUIRE(dsa_issort(inputArr.data(), size, esize, compare));
     REQUIRE(inputArr == expectedArr);
 }
 
@@ -113,35 +113,35 @@ TEMPLATE_TEST_CASE("Insertion sort works for numeric signed types",
     SECTION("Sort in ascending order")
     {
         std::vector<T> inputArr{-1, -3, 0, 1, -4, -5};
-        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(inputArr));
     }
 
     SECTION("Sort in descending order")
     {
         std::vector<T> inputArr{-10, 0, 1, 4, -2, -7};
-        REQUIRE(dsa_issort(static_cast<void*>(inputArr.data()), inputArr.size(), esize, descending_compare<T>) == 0);
+        REQUIRE(dsa_issort(static_cast<void*>(inputArr.data()), inputArr.size(), esize, descending_compare<T>));
         REQUIRE(std::ranges::is_sorted(inputArr, std::greater<>()));
     }
 
     SECTION("Sort using non-trivial comparator")
     {
         std::vector<T> numbers{-10, 4, 2, -1, -5, 0, 3, -2};
-        REQUIRE(dsa_issort(numbers.data(), numbers.size(), esize, abs_compare<T>) == 0);
+        REQUIRE(dsa_issort(numbers.data(), numbers.size(), esize, abs_compare<T>));
         REQUIRE(numbers == std::vector<T>{0, -1, 2, -2, 3, 4, -5, -10});
     }
 
     SECTION("Sort extreme values")
     {
         std::vector<T> boundaryInput{std::numeric_limits<T>::max(), 0, std::numeric_limits<T>::min()};
-        REQUIRE(dsa_issort(boundaryInput.data(), boundaryInput.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(boundaryInput.data(), boundaryInput.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(boundaryInput));
     }
 
     SECTION("Sort with duplicate values")
     {
         std::vector<T> inputArr{3, 1, 2, 1, 3, 0, 2};
-        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, descending_compare<T>) == 0);
+        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, descending_compare<T>));
         REQUIRE(std::ranges::is_sorted(inputArr, std::greater<>()));
     }
 }
@@ -156,37 +156,37 @@ TEMPLATE_TEST_CASE("Insertion sort works for numeric unsigned types", "[Insertio
     {
         std::vector<T> emptyArr;
         REQUIRE(emptyArr.empty());
-        REQUIRE(dsa_issort(emptyArr.data(), emptyArr.size(), esize, ascending_compare<T>) == -1);
+        REQUIRE_FALSE(dsa_issort(emptyArr.data(), emptyArr.size(), esize, ascending_compare<T>));
     }
 
     SECTION("Zero size with non-null data")
     {
         std::vector<T> data{3};
-        REQUIRE(dsa_issort(data.data(), 0, esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(data.data(), 0, esize, ascending_compare<T>));
     }
 
     SECTION("Zero element size")
     {
         std::vector<T> data{3, 3, 3};
-        REQUIRE(dsa_issort(data.data(), data.size(), 0, ascending_compare<T>) == -1);
+        REQUIRE_FALSE(dsa_issort(data.data(), data.size(), 0, ascending_compare<T>));
     }
 
     SECTION("Null pointer and zero size")
     {
-        REQUIRE(dsa_issort(nullptr, 0, esize, ascending_compare<T>) == -1);
+        REQUIRE_FALSE(dsa_issort(nullptr, 0, esize, ascending_compare<T>));
     }
 
     SECTION("Null pointer compare function")
     {
         std::vector<T> inputArr{1, 1, 1};
-        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, nullptr) == -1);
+        REQUIRE_FALSE(dsa_issort(inputArr.data(), inputArr.size(), esize, nullptr));
     }
 
     SECTION("Handling array with single element")
     {
         std::vector<T> singleElementArr{3};
         REQUIRE(singleElementArr.size() == 1);
-        REQUIRE(dsa_issort(singleElementArr.data(), singleElementArr.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(singleElementArr.data(), singleElementArr.size(), esize, ascending_compare<T>));
         REQUIRE(singleElementArr.size() == 1);
     }
 
@@ -195,35 +195,35 @@ TEMPLATE_TEST_CASE("Insertion sort works for numeric unsigned types", "[Insertio
         std::vector<T> allSameElementsArr(5, 1);
         REQUIRE(allSameElementsArr.size() == 5);
         REQUIRE(std::ranges::all_of(allSameElementsArr, [](const auto num){ return num == 1; }));
-        REQUIRE(dsa_issort(allSameElementsArr.data(), allSameElementsArr.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(allSameElementsArr.data(), allSameElementsArr.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(allSameElementsArr));
     }
 
     SECTION("Array already sorted")
     {
         std::vector<T> alreadySorted{0, 1, 2, 3, 4, 5};
-        REQUIRE(dsa_issort(alreadySorted.data(), alreadySorted.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(alreadySorted.data(), alreadySorted.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(alreadySorted));
     }
 
     SECTION("Reverse sorting")
     {
         std::vector<T> reverseSortedArr{5, 4, 3, 2, 1, 0};
-        REQUIRE(dsa_issort(reverseSortedArr.data(), reverseSortedArr.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(reverseSortedArr.data(), reverseSortedArr.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(reverseSortedArr));
     }
 
     SECTION("Sort in ascending order")
     {
         std::vector<T> inputArr{2, 1, 4, 5, 0};
-        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(inputArr));
     }
 
     SECTION("Sort in descending order")
     {
         std::vector<T> inputArr{2, 1, 4, 5, 0};
-        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, descending_compare<T>) == 0);
+        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, descending_compare<T>));
         REQUIRE(std::ranges::is_sorted(inputArr, std::greater<>()));
     }
 
@@ -233,7 +233,7 @@ TEMPLATE_TEST_CASE("Insertion sort works for numeric unsigned types", "[Insertio
         std::iota(inputArr.begin(), inputArr.end(), 0);
         std::shuffle(inputArr.begin(), inputArr.end(), std::mt19937{std::random_device{}()});
 
-        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, ascending_compare<T>) == 0);
+        REQUIRE(dsa_issort(inputArr.data(), inputArr.size(), esize, ascending_compare<T>));
         REQUIRE(std::ranges::is_sorted(inputArr));
     }
 }
@@ -249,7 +249,7 @@ TEST_CASE("Insertion sort with const char*", "[InsertionSort][CString]")
 
     SECTION("Sort in ascending order")
     {
-        REQUIRE(dsa_issort(input.data(), size, esize, compare_strings_ascending) == 0);
+        REQUIRE(dsa_issort(input.data(), size, esize, compare_strings_ascending));
         REQUIRE(std::ranges::is_sorted(input, [](const char* a, const char* b){
             return std::strcmp(a, b) < 0;
         }));
@@ -257,7 +257,7 @@ TEST_CASE("Insertion sort with const char*", "[InsertionSort][CString]")
 
     SECTION("Sort in descending order")
     {
-        REQUIRE(dsa_issort(input.data(), size, esize, compare_strings_descending) == 0);
+        REQUIRE(dsa_issort(input.data(), size, esize, compare_strings_descending));
         REQUIRE(std::ranges::is_sorted(input, [](const char* a, const char* b){
             return std::strcmp(a, b) > 0;
         }));
