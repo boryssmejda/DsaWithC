@@ -22,7 +22,7 @@ bool dsa_lsqe(const double *x, const double *y, const size_t size, double *a, do
         sumy += y[i];
     }
 
-    constexpr static double epsilon = 0.0001;
+    const double epsilon = 0.0001;
     const double denominator = ((double)size * sumx2 - sumx * sumx);
 
     if (fabs(denominator) < epsilon)
