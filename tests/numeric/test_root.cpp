@@ -43,12 +43,13 @@ TEST_CASE("Newton root-finding: invalid input", "[root_newton]") {
     auto g = [](double x) { return 1.0; };
 
     std::array<double, 5> x{1.0};
-    size_t n = 1; // Too small
+    size_t n = x.size();
     const double delta = 1e-6;
 
     SECTION("Too small size of x")
     {
-        REQUIRE_FALSE(root_newton(f, g, x.data(), &n, delta));
+        size_t tooSmallSize = 1;
+        REQUIRE_FALSE(root_newton(f, g, x.data(), &tooSmallSize, delta));
     }
 
     SECTION("Missing f function")
@@ -82,20 +83,24 @@ TEST_CASE("Newton root-finding: invalid input", "[root_newton]") {
     }
 }
 
-TEST_CASE("Newton root_newton-finding: division by zero", "[root_newton]") {
+TEST_CASE("Newton root-finding: division by zero", "[root_newton]") {
     auto f = [](double x) { return 2.0 * x; };
     auto g = [](double x) { return 0.0; }; // Derivative always zero
 
-    double x[5] = {1.0};
-    size_t n = 5;
-    REQUIRE_FALSE(root_newton(f, g, x, &n, 1e-6));
+    std::array<double, 5> x{1.0};
+    size_t n = x.size();
+    const double delta = 1e-6;
+
+    REQUIRE_FALSE(root_newton(f, g, x.data(), &n, delta));
 }
 
-TEST_CASE("Newton root_newton-finding: NaN and Inf handling", "[root_newton]") {
+TEST_CASE("Newton root-finding: NaN and Inf handling", "[root_newton]") {
     auto f = [](double x) { return x; };
     auto g = [](double x) { return x == 1.0 ? 1e-300 : 1.0; };
 
-    double x[10] = {1.0};
-    size_t n = 10;
-    REQUIRE_FALSE(root_newton(f, g, x, &n, 1e-6)); // Causes large jump or inf
+    std::array<double, 10> x{1.0};
+    size_t n = x.size();
+    const double delta = 1e-6;
+
+    REQUIRE_FALSE(root_newton(f, g, x.data(), &n, delta)); // Causes large jump or inf
 }

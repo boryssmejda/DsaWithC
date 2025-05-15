@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-bool root(
+bool root_newton(
     double (*f)(double x),
     double (*g)(double x),
     double *x,
