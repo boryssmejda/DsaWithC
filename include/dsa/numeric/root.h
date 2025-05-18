@@ -33,7 +33,7 @@
  * @complexity O(n), where n is the maximum number of iterations.
  */
 
-bool root_newton(
+bool dsa_find_root_newton(
     double (*f)(double x),
     double (*g)(double x),
     double *x,

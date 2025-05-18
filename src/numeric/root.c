@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-bool root_newton(
+bool dsa_find_root_newton(
     double (*f)(double x),
     double (*g)(double x),
     double *x,
@@ -32,7 +32,7 @@ bool root_newton(
 
         if (!isfinite(x[index + 1]))
         {
-            return false; // Check for NaN or Inf
+            return false;
         }
 
         if (fabs(x[index + 1] - x[index]) < delta)
