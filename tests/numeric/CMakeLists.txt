@@ -1,5 +1,6 @@
 add_executable(test_numeric
     ${CMAKE_CURRENT_SOURCE_DIR}/test_lsqe.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_root.cpp
 )
 
 target_compile_features(test_numeric PRIVATE cxx_std_23)

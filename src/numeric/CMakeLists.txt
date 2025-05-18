@@ -1,5 +1,6 @@
 add_library(numeric STATIC
     lsqe.c
+    root.c
 )
 
 target_include_directories(numeric PUBLIC
