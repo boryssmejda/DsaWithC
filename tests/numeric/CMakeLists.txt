@@ -1,5 +1,6 @@
 add_executable(test_numeric
     ${CMAKE_CURRENT_SOURCE_DIR}/test_lsqe.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_polynomial_interpolation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_root.cpp
 )
 
