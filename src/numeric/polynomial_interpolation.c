@@ -1,23 +1,46 @@
 #include "dsa/numeric/polynomial_interpolation.h"
 
-static double calculate_divided_difference(
+#include <math.h>
+
+static bool calculate_divided_difference(
     const double *x,
     const double *fx,
     const size_t start,
-    const size_t end)
+    const size_t end,
+    double* result)
 {
-    if (start == end)
+    if (!result)
     {
-        return fx[start];
+        return false;
     }
 
-    const double first = calculate_divided_difference(x, fx, start + 1, end);
-    const double second = calculate_divided_difference(x, fx, start, end - 1);
+    if (start == end)
+    {
+        *result = fx[start];
+        return true;
+    }
+
+    double first = 0.0;
+    double second = 0.0;
+
+    const bool isFirstCorrect = calculate_divided_difference(x, fx, start + 1, end, &first);
+    const bool isSecondCorrect = calculate_divided_difference(x, fx, start, end - 1, &second);
+
+    if (!isFirstCorrect || !isSecondCorrect)
+    {
+        return false;
+    }
 
     const double numerator = first - second;
     const double denominator = x[end] - x[start];
 
-    return numerator / denominator;
+    if (fabs(denominator) < 1e-6)
+    {
+        return false;
+    }
+
+    *result = numerator / denominator;
+    return true;
 }
 
 bool dsa_interpolate(
@@ -33,14 +56,28 @@ bool dsa_interpolate(
         return false;
     }
 
-    for (int i = 0; i < m; i++)
+    double firstTermValue = 0.0;
+    const bool isFirstTermValid = calculate_divided_difference(x, fx, 0, 0, &firstTermValue);
+
+    if (!isFirstTermValid)
     {
-        pz[i] = calculate_divided_difference(x, fx, 0, 0);
+        return false;
+    }
+
+    for (size_t i = 0; i < m; i++)
+    {
+        pz[i] = firstTermValue;
         double previous = 1;
 
-        for (int j = 0; j < n - 1; j++)
+        for (size_t j = 0; j < n - 1; j++)
         {
-            const double divided_difference = calculate_divided_difference(x, fx, 0, j + 1);
+            double divided_difference = 0.0;
+            const bool isValid = calculate_divided_difference(x, fx, 0, j + 1, &divided_difference);
+            if (!isValid)
+            {
+                return false;
+            }
+
             previous *= (z[i] - x[j]);
             pz[i] += (divided_difference * previous);
         }
