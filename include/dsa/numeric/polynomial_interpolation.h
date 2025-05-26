@@ -46,9 +46,9 @@
  * This includes \f$ O(n^2) \f$ to build the divided differences and \f$ O(n) \f$ for each evaluation at a point in @p z.
  */
 bool dsa_interpolate(
-    const double *x,
-    const double *fx,
+    const double * restrict x,
+    const double * restrict fx,
     const size_t n,
-    const double *z,
-    double *pz,
+    const double *restrict z,
+    double * restrict pz,
     const size_t m);

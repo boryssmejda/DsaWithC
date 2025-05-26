@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+// todo - obejrzyj o restrict keyword
+
 static bool calculate_divided_difference(
     const double *x,
     const double *fx,
@@ -34,7 +36,8 @@ static bool calculate_divided_difference(
     const double numerator = first - second;
     const double denominator = x[end] - x[start];
 
-    if (fabs(denominator) < 1e-6)
+    static const double epsilon = 1e-6;
+    if (fabs(denominator) < epsilon)
     {
         return false;
     }
@@ -44,11 +47,11 @@ static bool calculate_divided_difference(
 }
 
 bool dsa_interpolate(
-    const double *x,
-    const double *fx,
+    const double * restrict x,
+    const double * restrict fx,
     const size_t n,
-    const double *z,
-    double *pz,
+    const double *restrict z,
+    double * restrict pz,
     const size_t m)
 {
     if (!x || !fx || n < 2 || !z || !pz || m == 0)
@@ -56,30 +59,30 @@ bool dsa_interpolate(
         return false;
     }
 
-    double firstTermValue = 0.0;
-    const bool isFirstTermValid = calculate_divided_difference(x, fx, 0, 0, &firstTermValue);
+    double first_term_value = 0.0;
+    const bool is_first_term_valid = calculate_divided_difference(x, fx, 0, 0, &first_term_value);
 
-    if (!isFirstTermValid)
+    if (!is_first_term_valid)
     {
         return false;
     }
 
     for (size_t i = 0; i < m; i++)
     {
-        pz[i] = firstTermValue;
-        double previous = 1;
+        pz[i] = first_term_value;
+        double product_term = 1;
 
         for (size_t j = 0; j < n - 1; j++)
         {
             double divided_difference = 0.0;
-            const bool isValid = calculate_divided_difference(x, fx, 0, j + 1, &divided_difference);
-            if (!isValid)
+            const bool is_valid = calculate_divided_difference(x, fx, 0, j + 1, &divided_difference);
+            if (!is_valid)
             {
                 return false;
             }
 
-            previous *= (z[i] - x[j]);
-            pz[i] += (divided_difference * previous);
+            product_term *= (z[i] - x[j]);
+            pz[i] += (divided_difference * product_term);
         }
     }
 
