@@ -3,6 +3,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+    #define restrict
+#endif
+
+
 /**
  * @brief Interpolates values of a function using Newton polynomial interpolation.
  *

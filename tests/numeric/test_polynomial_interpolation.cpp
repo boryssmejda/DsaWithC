@@ -24,27 +24,29 @@ TEST_CASE("Interpolates linear function correctly", "[interpolation]")
     }
 }
 
-TEST_CASE("Interpolates quadratic function correctly", "[interpolation]") {
-    double x[] = {0.0, 1.0, 2.0};
-    double fx[] = {1.0, 4.0, 9.0}; // y = x^2 + 1
-    double z[] = {0.5, 1.5};
-    double expected[] = {1.25, 5.25};
-    double pz[2];
+TEST_CASE("Interpolates quadratic function correctly", "[interpolation]")
+{
+    constexpr std::array<double, 3> x{0.0, 1.0, 2.0};
+    constexpr std::array<double, 3> fx{1.0, 2.0, 5.0}; // y = x^2 + 1
+    constexpr std::array<double, 2> z{0.5, 1.5};
+    constexpr std::array<double, 2> expectedValues{1.25, 3.25};
+    std::array<double, 2> pz{};
 
-    REQUIRE(dsa_interpolate(x, fx, 3, z, pz, 2) == true);
-    for (size_t i = 0; i < 2; ++i)
+    REQUIRE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
+    for (size_t i = 0; i < expectedValues.size(); ++i)
     {
-        REQUIRE(pz[i] == Approx(expected[i]).epsilon(1e-10));
+        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
     }
 }
 
-TEST_CASE("Rejects repeated x values", "[interpolation]") {
-    double x[] = {1.0, 1.0};
-    double fx[] = {2.0, 2.0};
-    double z[] = {1.0};
-    double pz[1];
+TEST_CASE("Rejects repeated x values", "[interpolation]")
+{
+    constexpr std::array<double, 2> x{1.0, 1.0};
+    constexpr std::array<double, 2> fx{2.0, 2.0};
+    constexpr std::array<double, 1> z{1.0};
+    std::array<double, 1> pz{};
 
-    REQUIRE(dsa_interpolate(x, fx, 2, z, pz, 1) == false);
+    REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
 }
 
 TEST_CASE("Handle invalid input values", "[interpolation]")
