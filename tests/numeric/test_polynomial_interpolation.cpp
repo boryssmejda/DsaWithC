@@ -32,7 +32,8 @@ TEST_CASE("Interpolates quadratic function correctly", "[interpolation]") {
     double pz[2];
 
     REQUIRE(dsa_interpolate(x, fx, 3, z, pz, 2) == true);
-    for (size_t i = 0; i < 2; ++i) {
+    for (size_t i = 0; i < 2; ++i)
+    {
         REQUIRE(pz[i] == Approx(expected[i]).epsilon(1e-10));
     }
 }
@@ -46,18 +47,51 @@ TEST_CASE("Rejects repeated x values", "[interpolation]") {
     REQUIRE(dsa_interpolate(x, fx, 2, z, pz, 1) == false);
 }
 
-TEST_CASE("Handles null pointers safely", "[interpolation]") {
-    double x[] = {0.0, 1.0};
-    double fx[] = {1.0, 2.0};
-    double z[] = {0.5};
-    double pz[1];
+TEST_CASE("Handle invalid input values", "[interpolation]")
+{
+    constexpr std::array<double, 2> x{0.0, 1.0};
+    constexpr std::array<double, 2> fx{1.0, 2.0};
+    constexpr std::array<double, 1> z{0.5};
+    std::array<double, 1> pz{};
 
-    REQUIRE(dsa_interpolate(nullptr, fx, 2, z, pz, 1) == false);
-    REQUIRE(dsa_interpolate(x, nullptr, 2, z, pz, 1) == false);
-    REQUIRE(dsa_interpolate(x, fx, 2, nullptr, pz, 1) == false);
-    REQUIRE(dsa_interpolate(x, fx, 2, z, nullptr, 1) == false);
-}
+    REQUIRE(x.size() == 2);
+    REQUIRE(fx.size() == 2);
+    REQUIRE(z.size() == 1);
+    REQUIRE(pz.size() == 1);
 
-TEST_CASE("Handles empty input safely", "[interpolation]") {
-    REQUIRE(dsa_interpolate(nullptr, nullptr, 0, nullptr, nullptr, 0) == false);
+    SECTION("x array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolate(nullptr, fx.data(), x.size(), z.data(), pz.data(), z.size()));
+    }
+
+    SECTION("fx array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolate(x.data(), nullptr, x.size(), z.data(), pz.data(), z.size()));
+    }
+
+    SECTION("z array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), nullptr, pz.data(), pz.size()));
+    }
+
+    SECTION("pz array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), nullptr, z.size()));
+    }
+
+    SECTION("Incorrect size for x array")
+    {
+        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), 0, z.data(), pz.data(), 1));
+        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), 1, z.data(), pz.data(), 1));
+    }
+
+    SECTION("Incorrect size for pz array")
+    {
+        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), 0));
+    }
+
+    SECTION("All incorrect parameters")
+    {
+        REQUIRE_FALSE(dsa_interpolate(nullptr, nullptr, 0, nullptr, nullptr, 0));
+    }
 }
