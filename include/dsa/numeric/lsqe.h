@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -23,3 +28,7 @@
  */
 
 bool dsa_lsqe(const double *x, const double *y, const size_t size, double *a, double *b);
+
+#if __cplusplus
+} // extern "C"
+#endif
