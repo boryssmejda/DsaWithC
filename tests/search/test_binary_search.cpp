@@ -6,10 +6,7 @@
 #include <cstring>
 #include <vector>
 
-extern "C"
-{
 #include "dsa/search/binary_search.h"
-}
 
 template <typename T>
 int ascending_compare(const void* a, const void* b)

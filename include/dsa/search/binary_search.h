@@ -1,3 +1,10 @@
+#pragma once
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stddef.h>
 
 /**
@@ -33,3 +40,7 @@ size_t dsa_binary_search(
     const size_t size,
     const size_t esize,
     int (*compare)(const void *key1, const void *key2));
+
+#ifdef __cplusplus
+} // extern "C"
+#endif

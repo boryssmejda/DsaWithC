@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -46,3 +51,7 @@ bool dsa_issort(
     const size_t size,
     const size_t esize,
     int (*compare)(const void *key1, const void *key2));
+
+#ifdef __cplusplus
+} // extern "C"
+#endif

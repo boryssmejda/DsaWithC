@@ -4,10 +4,7 @@
 #include <array>
 #include <cmath>
 
-extern "C"
-{
 #include "dsa/numeric/root.h"
-}
 
 namespace
 {

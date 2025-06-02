@@ -9,10 +9,7 @@
 #include <numeric>
 #include <random>
 
-extern "C"
-{
 #include "dsa/sort/insertion_sort.h"
-}
 
 struct CharWithIndex
 {
