@@ -3,10 +3,8 @@
 
 #include <array>
 
-extern "C"
-{
 #include "dsa/numeric/polynomial_interpolation.h"
-}
+
 
 TEST_CASE("Interpolates linear function correctly", "[interpolation]")
 {
