@@ -1,48 +1,43 @@
 #include "dsa/numeric/polynomial_interpolation.h"
 
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 // todo - obejrzyj o restrict keyword
 
-static bool calculate_divided_difference(
-    const double *x,
-    const double *fx,
-    const size_t start,
-    const size_t end,
-    double* result)
+bool dsa_newton_coefficients(
+    const double * restrict x,
+    const double * restrict fx,
+    double * restrict coefficients,
+    size_t n)
 {
-    if (!result)
+    if (!x || !fx || !coefficients || n < 2)
     {
         return false;
     }
 
-    if (start == end)
+    for (size_t i = 0; i < n; i++)
     {
-        *result = fx[start];
-        return true;
+        coefficients[i] = fx[i];
     }
-
-    double first = 0.0;
-    double second = 0.0;
-
-    const bool isFirstCorrect = calculate_divided_difference(x, fx, start + 1, end, &first);
-    const bool isSecondCorrect = calculate_divided_difference(x, fx, start, end - 1, &second);
-
-    if (!isFirstCorrect || !isSecondCorrect)
-    {
-        return false;
-    }
-
-    const double numerator = first - second;
-    const double denominator = x[end] - x[start];
 
     static const double epsilon = 1e-6;
-    if (fabs(denominator) < epsilon)
+
+    for (size_t start = 1; start <= n; start++)
     {
-        return false;
+        for (size_t end = n - 1; end >= start; end--)
+        {
+            const double numerator = (coefficients[end] - coefficients[end - 1]);
+            const double denominator = (x[end] - x[end - 1]);
+            if (fabs(denominator) < epsilon)
+            {
+                return false;
+            }
+            coefficients[end] = numerator / denominator;
+        }
     }
 
-    *result = numerator / denominator;
     return true;
 }
 
@@ -59,32 +54,30 @@ bool dsa_interpolate(
         return false;
     }
 
-    double first_term_value = 0.0;
-    const bool is_first_term_valid = calculate_divided_difference(x, fx, 0, 0, &first_term_value);
-
-    if (!is_first_term_valid)
+    double* const coefficients = malloc(sizeof(*coefficients) * n);
+    if (!coefficients)
     {
+        return false;
+    }
+
+    if (!dsa_newton_coefficients(x, fx, coefficients, n))
+    {
+        free(coefficients);
         return false;
     }
 
     for (size_t i = 0; i < m; i++)
     {
-        pz[i] = first_term_value;
+        pz[i] = coefficients[0];
         double product_term = 1;
 
         for (size_t j = 0; j < n - 1; j++)
         {
-            double divided_difference = 0.0;
-            const bool is_valid = calculate_divided_difference(x, fx, 0, j + 1, &divided_difference);
-            if (!is_valid)
-            {
-                return false;
-            }
-
             product_term *= (z[i] - x[j]);
-            pz[i] += (divided_difference * product_term);
+            pz[i] += (coefficients[j + 1] * product_term);
         }
     }
 
+    free(coefficients);
     return true;
 }
