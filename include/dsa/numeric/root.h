@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stddef.h>
 
 /**
@@ -63,3 +68,7 @@ dsa_root_status dsa_find_root_newton(
     double *x,
     size_t *n,
     const double delta);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif

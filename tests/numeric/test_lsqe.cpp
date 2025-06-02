@@ -4,10 +4,7 @@
 #include <array>
 #include <vector>
 
-extern "C"
-{
 #include "dsa/numeric/lsqe.h"
-}
 
 TEST_CASE("Least square estimation method for incorrect input values", "[lsqe]")
 {
