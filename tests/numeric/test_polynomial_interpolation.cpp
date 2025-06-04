@@ -5,6 +5,57 @@
 
 #include "dsa/numeric/polynomial_interpolation.h"
 
+TEST_CASE("Newton coefficients for linear function", "[interpolation][newton_coefficients]")
+{
+    const std::array<double, 2> x{1.0, 2.0};
+    const std::array<double, 2> fx{2.0, 4.0}; // f(x) = 2x
+    const std::array<double, 2> expectedValues{2.0, 2.0};
+
+    std::array<double, 2> coefficients{};
+
+    REQUIRE(dsa_interpolation_find_newton_coefficients(
+        x.data(), fx.data(), coefficients.data(), x.size()));
+
+    for (size_t i = 0; i < expectedValues.size(); ++i)
+    {
+        REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
+    }
+}
+
+TEST_CASE("Newton coefficients for quadratic function", "[interpolation][newton_coefficients]")
+{
+    const std::array<double, 3> x{-1.0, 1.0, 2.0};
+    const std::array<double, 3> fx{2.0, 2.0, 5.0}; // f(x) = x^2 + 1
+    const std::array<double, 3> expectedValues{2.0, 0.0, 1.0};
+
+    std::array<double, 3> coefficients{};
+
+    REQUIRE(dsa_interpolation_find_newton_coefficients(
+        x.data(), fx.data(), coefficients.data(), x.size()));
+
+    for (size_t i = 0; i < expectedValues.size(); ++i)
+    {
+        REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
+    }
+}
+
+TEST_CASE("Newton coefficients for cubic function", "[interpolation][newton_coefficients]")
+{
+    const std::array<double, 5> x{-3.0, -1.0, 0.0, 1.0, 4.0};
+    const std::array<double, 5> fx{-7.0, 5.0, 5.0, 9.0, 105.0}; // f(x) = x^3 + 2x^2 + x + 5
+    const std::array<double, 5> expectedValues{};
+
+    std::array<double, 5> coefficients{};
+
+    REQUIRE(dsa_interpolation_find_newton_coefficients(
+        x.data(), fx.data(), coefficients.data(), x.size()));
+
+    for (size_t i = 0; i < expectedValues.size(); ++i)
+    {
+        std::printf("%lf\n", coefficients[i]);
+        //REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
+    }
+}
 
 TEST_CASE("Interpolates linear function correctly", "[interpolation]")
 {
@@ -29,6 +80,21 @@ TEST_CASE("Interpolates quadratic function correctly", "[interpolation]")
     constexpr std::array<double, 2> z{0.5, 1.5};
     constexpr std::array<double, 2> expectedValues{1.25, 3.25};
     std::array<double, 2> pz{};
+
+    REQUIRE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
+    for (size_t i = 0; i < expectedValues.size(); ++i)
+    {
+        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
+    }
+}
+
+TEST_CASE("Interpolates cubic function correctly", "[interpolation]")
+{
+    const std::array<double, 5> x{-3.0, -1.0, 0.0, 1.0, 4.0};
+    const std::array<double, 5> fx{-7.0, 5.0, 5.0, 9.0, 105.0}; // f(x) = x^3 + 2x^2 + x + 5
+    const std::array<double, 2> z{2.0, -2.0};
+    std::array<double, 2> pz{};
+    const std::array<double, 2> expectedValues{23.0, 3.0};
 
     REQUIRE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
     for (size_t i = 0; i < expectedValues.size(); ++i)

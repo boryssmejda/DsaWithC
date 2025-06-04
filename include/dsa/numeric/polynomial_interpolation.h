@@ -21,11 +21,11 @@ extern "C"
  * @param[in]  n      Number of data points.
  * @return true if successful, false if inputs are invalid or x values are not distinct.
  */
-bool dsa_newton_coefficients(
+bool dsa_interpolation_find_newton_coefficients(
     const double * restrict x,
     const double * restrict fx,
     double * restrict coeffs,
-    size_t n);
+    const size_t n);
 
 
 /**
@@ -39,13 +39,13 @@ bool dsa_newton_coefficients(
  * @param[in]  m       Number of evaluation points.
  * @return true if successful, false otherwise (e.g., invalid parameters).
  */
-bool dsa_newton_evaluate(
+bool dsa_interpolation_evaluate_newton_polynomial(
     const double * restrict x,
-    const double * restrict coeffs,
-    size_t n,
+    const double * restrict coefficients,
+    const size_t coefficientsSize,
     const double * restrict z,
     double * restrict pz,
-    size_t m);
+    const size_t pzSize);
 
 /**
  * @brief Interpolates values of a function using Newton polynomial interpolation.
