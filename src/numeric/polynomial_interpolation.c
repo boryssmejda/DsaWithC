@@ -11,7 +11,7 @@ bool dsa_interpolation_find_newton_coefficients(
     double * restrict coefficients,
     size_t n)
 {
-    if (!x || !fx || !coefficients || n < 2)
+    if (!x || !fx || !coefficients || n < 1)
     {
         return false;
     }
@@ -48,7 +48,7 @@ bool dsa_interpolation_evaluate_newton_polynomial(
     double * restrict pz,
     const size_t pzSize)
 {
-    if (!x || !coefficients || coefficientsSize < 2 || !z || !pz || pzSize == 0)
+    if (!x || !coefficients || coefficientsSize < 1 || !z || !pz || pzSize == 0)
     {
         return false;
     }
@@ -56,7 +56,7 @@ bool dsa_interpolation_evaluate_newton_polynomial(
     for (size_t i = 0; i < pzSize; i++)
     {
         pz[i] = coefficients[0];
-        double product_term = 1;
+        double product_term = 1.0;
 
         for (size_t j = 0; j < coefficientsSize - 1; j++)
         {
@@ -66,35 +66,4 @@ bool dsa_interpolation_evaluate_newton_polynomial(
     }
 
     return true;
-}
-
-
-bool dsa_interpolate(
-    const double * restrict x,
-    const double * restrict fx,
-    const size_t n,
-    const double *restrict z,
-    double * restrict pz,
-    const size_t m)
-{
-    if (!x || !fx || n < 2 || !z || !pz || m == 0)
-    {
-        return false;
-    }
-
-    double* const coefficients = malloc(sizeof(*coefficients) * n);
-    if (!coefficients)
-    {
-        return false;
-    }
-
-    if (!dsa_interpolation_find_newton_coefficients(x, fx, coefficients, n))
-    {
-        free(coefficients);
-        return false;
-    }
-
-    const bool is_success = dsa_interpolation_evaluate_newton_polynomial(x, coefficients, n, z, pz, m);
-    free(coefficients);
-    return is_success;
 }

@@ -5,7 +5,32 @@
 
 #include "dsa/numeric/polynomial_interpolation.h"
 
-TEST_CASE("Newton coefficients for linear function", "[interpolation][newton_coefficients]")
+TEST_CASE("Interpolating constant function", "[interpolation]")
+{
+    const std::array<double, 1> x{5.0};
+    const std::array<double, 1> fx{1.0};
+    const std::array<double, 1> expectedCoefficients{1.0};
+
+    std::array<double, 1> coefficients{};
+    REQUIRE(dsa_interpolation_find_newton_coefficients(x.data(), fx.data(), coefficients.data(), x.size()));
+
+    for (size_t i = 0; i < expectedCoefficients.size(); i++)
+    {
+        REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedCoefficients[i], 0.0001));
+    }
+
+    std::array<double, 3> z{-5.0, 0.0, 10.0};
+    std::array<double, 3> pz{};
+    std::array<double, 3> expectedFunctionValues{1.0, 1.0, 1.0};
+    REQUIRE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), z.data(), pz.data(), pz.size()));
+
+    for (size_t i = 0; i < expectedFunctionValues.size(); i++)
+    {
+        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedFunctionValues[i], 0.0001));
+    }
+}
+
+TEST_CASE("Interpolating linear function", "[interpolation]")
 {
     const std::array<double, 2> x{1.0, 2.0};
     const std::array<double, 2> fx{2.0, 4.0}; // f(x) = 2x
@@ -20,9 +45,19 @@ TEST_CASE("Newton coefficients for linear function", "[interpolation][newton_coe
     {
         REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
     }
+
+    std::array<double, 3> z{-10.0, 5.0, 7.0};
+    std::array<double, 3> pz{};
+    std::array<double, 3> expectedFunctionValues{-20.0, 10.0, 14.0};
+    REQUIRE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), z.data(), pz.data(), pz.size()));
+
+    for (size_t i = 0; i < expectedFunctionValues.size(); i++)
+    {
+        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedFunctionValues[i], 0.0001));
+    }
 }
 
-TEST_CASE("Newton coefficients for quadratic function", "[interpolation][newton_coefficients]")
+TEST_CASE("Interpolating quadratic function", "[interpolation]")
 {
     const std::array<double, 3> x{-1.0, 1.0, 2.0};
     const std::array<double, 3> fx{2.0, 2.0, 5.0}; // f(x) = x^2 + 1
@@ -37,13 +72,23 @@ TEST_CASE("Newton coefficients for quadratic function", "[interpolation][newton_
     {
         REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
     }
+
+    std::array<double, 3> z{-3.0, 0, 7.0};
+    std::array<double, 3> pz{};
+    std::array<double, 3> expectedFunctionValues{10.0, 1.0, 50.0};
+    REQUIRE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), z.data(), pz.data(), pz.size()));
+
+    for (size_t i = 0; i < expectedFunctionValues.size(); i++)
+    {
+        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedFunctionValues[i], 0.0001));
+    }
 }
 
-TEST_CASE("Newton coefficients for cubic function", "[interpolation][newton_coefficients]")
+TEST_CASE("Interpolating cubic function", "[interpolation]")
 {
     const std::array<double, 5> x{-3.0, -1.0, 0.0, 1.0, 4.0};
     const std::array<double, 5> fx{-7.0, 5.0, 5.0, 9.0, 105.0}; // f(x) = x^3 + 2x^2 + x + 5
-    const std::array<double, 5> expectedValues{};
+    const std::array<double, 5> expectedValues{-7.0, 6.0, -2.0, 1.0, 0.0};
 
     std::array<double, 5> coefficients{};
 
@@ -52,54 +97,17 @@ TEST_CASE("Newton coefficients for cubic function", "[interpolation][newton_coef
 
     for (size_t i = 0; i < expectedValues.size(); ++i)
     {
-        std::printf("%lf\n", coefficients[i]);
-        //REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
+        REQUIRE_THAT(coefficients[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
     }
-}
 
-TEST_CASE("Interpolates linear function correctly", "[interpolation]")
-{
-    const std::array<double, 2> x{1.0, 2.0};
-    const std::array<double, 2> fx{2.0, 4.0}; // f(x) = 2x
-    const std::array<double, 2> z{1.5, 3.0};
-    const std::array<double, 2> expectedValues{3.0, 6.0};
-    std::array<double, 2> pz{};
+    std::array<double, 3> z{-4.0, 0.5, 3.5};
+    std::array<double, 3> pz{};
+    std::array<double, 3> expectedFunctionValues{-31.0, 6.125, 75.875};
+    REQUIRE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), z.data(), pz.data(), pz.size()));
 
-    REQUIRE(dsa_interpolate(x.data(), fx.data(), fx.size(), z.data(), pz.data(), pz.size()));
-
-    for (size_t i = 0; i < expectedValues.size(); ++i)
+    for (size_t i = 0; i < expectedFunctionValues.size(); i++)
     {
-        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
-    }
-}
-
-TEST_CASE("Interpolates quadratic function correctly", "[interpolation]")
-{
-    constexpr std::array<double, 3> x{0.0, 1.0, 2.0};
-    constexpr std::array<double, 3> fx{1.0, 2.0, 5.0}; // y = x^2 + 1
-    constexpr std::array<double, 2> z{0.5, 1.5};
-    constexpr std::array<double, 2> expectedValues{1.25, 3.25};
-    std::array<double, 2> pz{};
-
-    REQUIRE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
-    for (size_t i = 0; i < expectedValues.size(); ++i)
-    {
-        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
-    }
-}
-
-TEST_CASE("Interpolates cubic function correctly", "[interpolation]")
-{
-    const std::array<double, 5> x{-3.0, -1.0, 0.0, 1.0, 4.0};
-    const std::array<double, 5> fx{-7.0, 5.0, 5.0, 9.0, 105.0}; // f(x) = x^3 + 2x^2 + x + 5
-    const std::array<double, 2> z{2.0, -2.0};
-    std::array<double, 2> pz{};
-    const std::array<double, 2> expectedValues{23.0, 3.0};
-
-    REQUIRE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
-    for (size_t i = 0; i < expectedValues.size(); ++i)
-    {
-        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedValues[i], 0.0001));
+        REQUIRE_THAT(pz[i], Catch::Matchers::WithinAbs(expectedFunctionValues[i], 0.0001));
     }
 }
 
@@ -107,57 +115,86 @@ TEST_CASE("Rejects repeated x values", "[interpolation]")
 {
     constexpr std::array<double, 2> x{1.0, 1.0};
     constexpr std::array<double, 2> fx{2.0, 2.0};
-    constexpr std::array<double, 1> z{1.0};
-    std::array<double, 1> pz{};
+    std::array<double, 2> coefficients{};
 
-    REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), z.size()));
+    REQUIRE_FALSE(dsa_interpolation_find_newton_coefficients(x.data(), fx.data(), coefficients.data(), x.size()));
 }
 
-TEST_CASE("Handle invalid input values", "[interpolation]")
+TEST_CASE("Handle invalid input values for finding coefficients", "[interpolation]")
 {
     constexpr std::array<double, 2> x{0.0, 1.0};
-    constexpr std::array<double, 2> fx{1.0, 2.0};
-    constexpr std::array<double, 1> z{0.5};
-    std::array<double, 1> pz{};
+    constexpr std::array<double, 2> fx{1.0, 2.0}; // y = x + 1
+    std::array<double, 2> coefficients{};
 
     REQUIRE(x.size() == 2);
     REQUIRE(fx.size() == 2);
-    REQUIRE(z.size() == 1);
-    REQUIRE(pz.size() == 1);
+    REQUIRE(coefficients.size() == 2);
 
     SECTION("x array is nullptr")
     {
-        REQUIRE_FALSE(dsa_interpolate(nullptr, fx.data(), x.size(), z.data(), pz.data(), z.size()));
+        REQUIRE_FALSE(dsa_interpolation_find_newton_coefficients(nullptr, fx.data(), coefficients.data(), fx.size()));
     }
 
     SECTION("fx array is nullptr")
     {
-        REQUIRE_FALSE(dsa_interpolate(x.data(), nullptr, x.size(), z.data(), pz.data(), z.size()));
+        REQUIRE_FALSE(dsa_interpolation_find_newton_coefficients(x.data(), nullptr, coefficients.data(), x.size()));
     }
 
-    SECTION("z array is nullptr")
+    SECTION("coefficients array is nullptr")
     {
-        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), nullptr, pz.data(), pz.size()));
-    }
-
-    SECTION("pz array is nullptr")
-    {
-        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), nullptr, z.size()));
+        REQUIRE_FALSE(dsa_interpolation_find_newton_coefficients(x.data(), fx.data(), nullptr, x.size()));
     }
 
     SECTION("Incorrect size for x array")
     {
-        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), 0, z.data(), pz.data(), 1));
-        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), 1, z.data(), pz.data(), 1));
-    }
-
-    SECTION("Incorrect size for pz array")
-    {
-        REQUIRE_FALSE(dsa_interpolate(x.data(), fx.data(), x.size(), z.data(), pz.data(), 0));
+        REQUIRE_FALSE(dsa_interpolation_find_newton_coefficients(x.data(), fx.data(), coefficients.data(), 0));
     }
 
     SECTION("All incorrect parameters")
     {
-        REQUIRE_FALSE(dsa_interpolate(nullptr, nullptr, 0, nullptr, nullptr, 0));
+        REQUIRE_FALSE(dsa_interpolation_find_newton_coefficients(nullptr, nullptr, nullptr, 0));
+    }
+}
+
+TEST_CASE("Handle invalid input values for evaluating polynomial", "[interpolation]")
+{
+    constexpr std::array<double, 2> x{0.0, 1.0};
+    constexpr std::array<double, 1> z{0.5};
+    constexpr std::array<double, 2> coefficients{1.0, 1.0};
+    std::array<double, 1> pz{};
+
+    SECTION("x array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(nullptr, coefficients.data(), coefficients.size(), z.data(), pz.data(), pz.size()));
+    }
+
+    SECTION("coefficients array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(x.data(), nullptr, coefficients.size(), z.data(), pz.data(), pz.size()));
+    }
+
+    SECTION("coefficients array size is 0")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), 0, z.data(), pz.data(), pz.size()));
+    }
+
+    SECTION("z array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), nullptr, pz.data(), pz.size()));
+    }
+
+    SECTION("pz array is nullptr")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), z.data(), nullptr, pz.size()));
+    }
+
+    SECTION("pz size is 0")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(x.data(), coefficients.data(), coefficients.size(), z.data(), pz.data(), 0));
+    }
+
+    SECTION("All incorrect parameters")
+    {
+        REQUIRE_FALSE(dsa_interpolation_evaluate_newton_polynomial(nullptr, nullptr, 0, nullptr, nullptr, 0));
     }
 }
