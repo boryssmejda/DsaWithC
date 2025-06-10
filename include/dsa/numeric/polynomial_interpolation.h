@@ -15,37 +15,46 @@ extern "C"
 /**
  * @brief Computes Newton divided difference coefficients for polynomial interpolation.
  *
- * @param[in]  x      Array of known x-values (size n).
- * @param[in]  fx     Array of known function values (size n).
- * @param[out] coeffs Output array of divided difference coefficients (size n).
- * @param[in]  n      Number of data points.
- * @return true if successful, false if inputs are invalid or x values are not distinct.
+ * Given arrays of x-values and their corresponding function values,
+ * computes the coefficients of the Newton interpolating polynomial
+ * using the divided differences method.
+ *
+ * @param[in]  x           Array of known x-values (size n).
+ * @param[in]  fx          Array of known function values (size n).
+ * @param[out] coefficients Output array for divided difference coefficients (size n).
+ * @param[in]  n           Number of data points.
+ * 
+ * @return true if successful; false if inputs are invalid or x-values are not distinct enough.
  */
 bool dsa_interpolation_find_newton_coefficients(
     const double * restrict x,
     const double * restrict fx,
-    double * restrict coeffs,
+    double * restrict coefficients,
     const size_t n);
 
 
 /**
  * @brief Evaluates a Newton interpolating polynomial at specified points.
  *
- * @param[in]  x       Array of base x-values used to compute coefficients (size n).
- * @param[in]  coeffs  Array of Newton coefficients (size n).
- * @param[in]  n       Number of coefficients (data points).
- * @param[in]  z       Array of x-values where the polynomial should be evaluated (size m).
- * @param[out] pz      Output array for computed values at z (size m).
- * @param[in]  m       Number of evaluation points.
- * @return true if successful, false otherwise (e.g., invalid parameters).
+ * Given the base x-values and Newton polynomial coefficients,
+ * evaluates the polynomial at each point in the z array.
+ *
+ * @param[in]  x              Array of base x-values used to compute coefficients (size n).
+ * @param[in]  coefficients   Array of Newton coefficients (size n).
+ * @param[in]  n              Number of coefficients (and size of x array).
+ * @param[in]  z              Array of x-values where the polynomial should be evaluated (size m).
+ * @param[out] pz             Output array for computed polynomial values at points in z (size m).
+ * @param[in]  m              Number of evaluation points.
+ * 
+ * @return true if successful; false if any input parameters are invalid.
  */
 bool dsa_interpolation_evaluate_newton_polynomial(
     const double * restrict x,
     const double * restrict coefficients,
-    const size_t coefficientsSize,
+    const size_t n,
     const double * restrict z,
     double * restrict pz,
-    const size_t pzSize);
+    const size_t m);
 
 #ifdef __cplusplus
 } // extern "C"

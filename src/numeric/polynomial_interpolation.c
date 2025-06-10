@@ -1,9 +1,6 @@
 #include "dsa/numeric/polynomial_interpolation.h"
 
 #include <math.h>
-#include <stdlib.h>
-
-// todo - obejrzyj o restrict keyword
 
 bool dsa_interpolation_find_newton_coefficients(
     const double * restrict x,
@@ -43,22 +40,22 @@ bool dsa_interpolation_find_newton_coefficients(
 bool dsa_interpolation_evaluate_newton_polynomial(
     const double * restrict x,
     const double * restrict coefficients,
-    const size_t coefficientsSize,
+    const size_t n,
     const double * restrict z,
     double * restrict pz,
-    const size_t pzSize)
+    const size_t m)
 {
-    if (!x || !coefficients || coefficientsSize < 1 || !z || !pz || pzSize == 0)
+    if (!x || !coefficients || n < 1 || !z || !pz || m == 0)
     {
         return false;
     }
 
-    for (size_t i = 0; i < pzSize; i++)
+    for (size_t i = 0; i < m; i++)
     {
         pz[i] = coefficients[0];
         double product_term = 1.0;
 
-        for (size_t j = 0; j < coefficientsSize - 1; j++)
+        for (size_t j = 0; j < n - 1; j++)
         {
             product_term *= (z[i] - x[j]);
             pz[i] += (coefficients[j + 1] * product_term);
