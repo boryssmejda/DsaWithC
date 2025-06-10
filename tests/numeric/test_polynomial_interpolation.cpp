@@ -102,7 +102,7 @@ TEST_CASE("Interpolating quadratic function", "[interpolation]")
 TEST_CASE("Interpolation with out-of-order x values", "[interpolation]") {
     constexpr std::array<double, 3> x{2.0, -1.0, 1.0}; // out of order
     constexpr std::array<double, 3> fx{5.0, 2.0, 2.0}; // f(x) = x^2 + 1
-    constexpr std::array<double, 3> expectedCoefficients{5.0, -1.0, 1.0};
+    constexpr std::array<double, 3> expectedCoefficients{5.0, 1.0, 1.0};
     std::array<double, 3> coefficients{};
 
     REQUIRE(dsa_interpolation_find_newton_coefficients(x.data(), fx.data(), coefficients.data(), x.size()));
