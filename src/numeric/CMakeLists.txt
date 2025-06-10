@@ -1,5 +1,6 @@
 add_library(numeric STATIC
     lsqe.c
+    polynomial_interpolation.c
     root.c
 )
 
