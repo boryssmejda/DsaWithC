@@ -4,8 +4,13 @@ project(DsaWithC
     DESCRIPTION "Data structures and algorithms implemented in C language."
     LANGUAGES C CXX)
 
+option(DSA_ENABLE_TESTING "Enable building unit tests for the DSA library" OFF)
+
 include(${CMAKE_SOURCE_DIR}/cmake/ProjectBuildFlags.cmake)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
 
+if (DSA_ENABLE_TESTING)
+    enable_testing()
+    add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
+endif()

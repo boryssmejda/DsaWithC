@@ -11,3 +11,5 @@ target_link_libraries(test_numeric
         dsa::numeric
         Catch2::Catch2WithMain
 )
+
+catch_discover_tests(test_numeric PROPERTIES LABELS "unit_tests")
