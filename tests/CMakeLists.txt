@@ -8,6 +8,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
+include(Catch)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/numeric)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/search)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sort)
