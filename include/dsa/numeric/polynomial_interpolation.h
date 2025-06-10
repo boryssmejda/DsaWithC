@@ -23,8 +23,10 @@ extern "C"
  * @param[in]  fx          Array of known function values (size n).
  * @param[out] coefficients Output array for divided difference coefficients (size n).
  * @param[in]  n           Number of data points.
- * 
+ *
  * @return true if successful; false if inputs are invalid or x-values are not distinct enough.
+ *
+ * @note Time complexity: O(n^2) due to nested loops computing divided differences.
  */
 bool dsa_interpolation_find_newton_coefficients(
     const double * restrict x,
@@ -37,7 +39,7 @@ bool dsa_interpolation_find_newton_coefficients(
  * @brief Evaluates a Newton interpolating polynomial at specified points.
  *
  * Given the base x-values and Newton polynomial coefficients,
- * evaluates the polynomial at each point in the z array.
+ * evaluates the polynomial at each point in the z array using Horner's-like scheme.
  *
  * @param[in]  x              Array of base x-values used to compute coefficients (size n).
  * @param[in]  coefficients   Array of Newton coefficients (size n).
@@ -45,8 +47,11 @@ bool dsa_interpolation_find_newton_coefficients(
  * @param[in]  z              Array of x-values where the polynomial should be evaluated (size m).
  * @param[out] pz             Output array for computed polynomial values at points in z (size m).
  * @param[in]  m              Number of evaluation points.
- * 
+ *
  * @return true if successful; false if any input parameters are invalid.
+ *
+ * @note Time complexity: O(m * n) where @p m is the number of evaluation points,
+ *       and @p n is the degree + 1 of the interpolating polynomial.
  */
 bool dsa_interpolation_evaluate_newton_polynomial(
     const double * restrict x,
