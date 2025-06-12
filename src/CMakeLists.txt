@@ -6,6 +6,7 @@ add_library(dsa
     $<TARGET_OBJECTS:numeric>
     $<TARGET_OBJECTS:search>
     $<TARGET_OBJECTS:sort>
+    $<TARGET_OBJECTS:utility>
 )
 
 target_include_directories(dsa PUBLIC
