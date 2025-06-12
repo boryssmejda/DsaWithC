@@ -9,7 +9,7 @@ extern "C"
 {
 #endif
 
-dsa_error_code dsa_reverse(void* arr, const size_t count, const size_t elem_size);
+dsa_error_code dsa_for_each(void* arr, const size_t count, const size_t elem_size, void (*operation)(void* arg));
 
 #ifdef __cplusplus
 }
