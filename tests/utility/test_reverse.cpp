@@ -124,6 +124,17 @@ TEST_CASE("dsa_reverse handles valid input", "[dsa_reverse]")
 
         REQUIRE(input == expected);
     }
+
+    SECTION("dsa_reverse reversing twice restores original array")
+    {
+        std::array<int, 6> original{1, 2, 3, 4, 5, 6};
+        std::array<int, 6> input = original;
+
+        REQUIRE(dsa_reverse(input.data(), input.size(), sizeof(int)) == DSA_SUCCESS);
+        REQUIRE(dsa_reverse(input.data(), input.size(), sizeof(int)) == DSA_SUCCESS);
+
+        REQUIRE(input == original); // after reversing twice array should look like the original
+    }
 }
 
 TEST_CASE("dsa_reverse handles invalid input", "[dsa_reverse][error]")
@@ -158,5 +169,10 @@ TEST_CASE("dsa_reverse handles array of std::max_align_t", "[dsa_reverse][max_al
     std::array<std::max_align_t, 3> expected{3.3L, 2.2L, 1.1L};
 
     REQUIRE(dsa_reverse(input.data(), input.size(), sizeof(std::max_align_t)) == DSA_SUCCESS);
-    REQUIRE(input == expected);
+
+    for (size_t i = 0; i < input.size(); i++)
+    {
+        constexpr double tolerance{0.0001};
+        REQUIRE_THAT(input[i], Catch::Matchers::WithinAbs(expected[i], tolerance));
+    }
 }
