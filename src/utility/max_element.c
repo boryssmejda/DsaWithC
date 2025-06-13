@@ -4,7 +4,7 @@ size_t dsa_max_element(
     const void* const arr,
     const size_t count,
     const size_t elem_size,
-    bool (*compare)(const void* a, const void* b))
+    int (*compare)(const void* a, const void* b))
 {
     if (!arr || count == 0 || elem_size == 0 || !compare)
     {
@@ -18,7 +18,7 @@ size_t dsa_max_element(
     {
         const unsigned char* current = buffer + i * elem_size;
         const unsigned char* max_element = buffer + max_index * elem_size;
-        if (compare(current, max_element))
+        if (compare(current, max_element) > 0)
         {
             max_index = i;
         }

@@ -11,6 +11,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/ProjectBuildFlags.cmake)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 
 if (DSA_ENABLE_TESTING)
+    message(STATUS "DSA: Enabled Testing")
     enable_testing()
     add_subdirectory(${CMAKE_SOURCE_DIR}/tests)
 endif()
