@@ -10,9 +10,9 @@ include(CheckCXXCompilerFlag)
 include(CheckCCompilerFlag)
 
 check_cxx_compiler_flag("-ftest-coverage" CXX_COMPILER_SUPPORT_TEST_COVERAGE)
-check_cxx_compiler_flag("-fprofile-arcs" CXX_COMPILER_SUPPORT_PROFILE_ARCS)
-
 check_c_compiler_flag("-ftest-coverage" C_COMPILER_SUPPORT_TEST_COVERAGE)
+
+check_cxx_compiler_flag("-fprofile-arcs" CXX_COMPILER_SUPPORT_PROFILE_ARCS)
 check_c_compiler_flag("-fprofile-arcs" C_COMPILER_SUPPORT_PROFILE_ARCS)
 
 check_cxx_compiler_flag("--coverage" CXX_COMPILER_SUPPORTS_COVERAGE)

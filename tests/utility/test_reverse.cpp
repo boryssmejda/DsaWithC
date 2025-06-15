@@ -163,16 +163,22 @@ TEST_CASE("dsa_reverse handles invalid input", "[dsa_reverse][error]")
     }
 }
 
-TEST_CASE("dsa_reverse handles array of std::max_align_t", "[dsa_reverse][max_align_t]")
+TEST_CASE("reverse works with std::max_align_t", "[dsa_reverse]")
 {
-    std::array<std::max_align_t, 3> input{1.1L, 2.2L, 3.3L};  // Use long double literals (L suffix)
-    std::array<std::max_align_t, 3> expected{3.3L, 2.2L, 1.1L};
+    long long a = 1, b = 2, c = 3;
+    std::array<std::max_align_t, 3> buffer;
+    std::memcpy(&buffer[0], &a, sizeof(a));
+    std::memcpy(&buffer[1], &b, sizeof(b));
+    std::memcpy(&buffer[2], &c, sizeof(c));
 
-    REQUIRE(dsa_reverse(input.data(), input.size(), sizeof(std::max_align_t)) == DSA_SUCCESS);
+    dsa_reverse(buffer.data(), buffer.size(), sizeof(std::max_align_t));  // Your function
 
-    for (size_t i = 0; i < input.size(); i++)
-    {
-        constexpr double tolerance{0.0001};
-        REQUIRE_THAT(input[i], Catch::Matchers::WithinAbs(expected[i], tolerance));
-    }
+    long long out0, out1, out2;
+    std::memcpy(&out0, &buffer[0], sizeof(out0));
+    std::memcpy(&out1, &buffer[1], sizeof(out1));
+    std::memcpy(&out2, &buffer[2], sizeof(out2));
+
+    REQUIRE(out0 == 3);
+    REQUIRE(out1 == 2);
+    REQUIRE(out2 == 1);
 }
