@@ -14,7 +14,7 @@ dsa_root_status dsa_find_root_newton(
         return DSA_ROOT_INVALID_ARGUMENT;
     }
 
-    const static double epsilon = 1e-12;
+    static const double epsilon = 1e-12;
 
     size_t index = 0;
     while (index + 1 < *n)
