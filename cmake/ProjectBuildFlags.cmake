@@ -1,3 +1,5 @@
+include_guard()
+
 add_library(build_flags INTERFACE)
 add_library(dsa::build_flags ALIAS build_flags)
 

@@ -44,6 +44,11 @@ int compare_strings_descending(const void* a, const void* b)
     return (result < 0) - (result > 0);
 }
 
+int compare_with_wrong_return_value([[maybe_unused]] const void* a, [[maybe_unused]] const void* b)
+{
+    return 100;
+}
+
 TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
     int8_t, int16_t, int32_t, int64_t,
     uint8_t, uint16_t, uint32_t, uint64_t,
@@ -51,7 +56,9 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
 {
     using T = TestType;
     std::vector<T> arr;
-    const int esize = sizeof(T);
+    const size_t esize = sizeof(T);
+
+    REQUIRE(esize != 0);
 
     SECTION("Empty array")
     {
@@ -64,6 +71,11 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
         REQUIRE(result == arr.size());
     }
 
+    arr.push_back(1);
+
+    REQUIRE(arr.data() != nullptr);
+    REQUIRE(arr.size() != 0);
+
     SECTION("No target value")
     {
         const auto result = dsa_binary_search(
@@ -71,12 +83,8 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
         REQUIRE(result == arr.size());
     }
 
-    arr.push_back(1);
-
     SECTION("Mismatch in array size")
     {
-        REQUIRE(arr.size() == 1);
-
         const T target = 0;
         const size_t mismatchedSize = 0;
         const auto result = dsa_binary_search(
@@ -87,8 +95,6 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
 
     SECTION("Element size equal 0")
     {
-        REQUIRE(arr.data() != nullptr);
-
         const T target = 0;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), 0, ascending_compare<T>);
 
@@ -99,6 +105,14 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
     {
         const T target = 0;
         const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, nullptr);
+
+        REQUIRE(result == arr.size());
+    }
+
+    SECTION("Compare function returns value not equal to -1, 0 or 1")
+    {
+        const T target = 0;
+        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, compare_with_wrong_return_value);
 
         REQUIRE(result == arr.size());
     }
