@@ -6,12 +6,14 @@ endif()
 
 message(STATUS "DSA: Enabled code coverage build")
 
-if(CMAKE_BUILD_TYPE AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(FATAL_ERROR "Coverage can only be generated in Debug build.")
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+elseif(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(FATAL_ERROR "Code coverage requires Debug build type")
 endif()
 
-target_compile_options(build_flags INTERFACE --coverage -g)
-target_link_options(build_flags INTERFACE --coverage -g)
+target_compile_options(build_flags INTERFACE --coverage)
+target_link_options(build_flags INTERFACE --coverage)
 
 find_program(GCOVR_PATH gcovr REQUIRED)
 
