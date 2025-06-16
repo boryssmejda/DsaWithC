@@ -30,6 +30,8 @@ size_t dsa_binary_search(
                 break;
             case 0:
                 return middle;
+            default:
+                return size;
         }
     }
 

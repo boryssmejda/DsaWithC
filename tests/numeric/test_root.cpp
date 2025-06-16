@@ -124,6 +124,14 @@ TEST_CASE("Handling extreme values", "[root_newton]")
         REQUIRE(dsa_find_root_newton(f, g, x.data(), &n, delta) == DSA_ROOT_NUMERICAL_ERROR);
     }
 
+    SECTION("Handling fx returning inf")
+    {
+        auto f = [](double x) { return std::numeric_limits<double>::infinity(); };
+        auto g = [](double x) { return 1.0; };
+
+        REQUIRE(dsa_find_root_newton(f, g, x.data(), &n, delta) == DSA_ROOT_NUMERICAL_ERROR);
+    }
+
     SECTION("Handling overflow resulting in Inf")
     {
         auto f = [](double x) { return 1e300; };
