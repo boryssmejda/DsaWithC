@@ -11,7 +11,8 @@ extern "C"
  * @brief Returns the index of the maximum element in a generic array.
  *
  * This function finds the index of the maximum element in an array using
- * a user-provided comparison function.
+ * a user-provided comparison function. If multiple elements are equal to
+ * the maximum, the index of the first one is returned.
  *
  * @param arr Pointer to the first element of the array.
  * @param count Number of elements in the array.
@@ -25,6 +26,11 @@ extern "C"
  *
  * @note The caller must ensure that the memory pointed to by @p arr is valid
  *       and contains at least @p count elements of size @p elem_size.
+ *
+ * @note If there are multiple elements equal to the maximum, the first such
+ *       element (i.e., with the lowest index) is returned.
+ *
+ * @complexity O(n), where n is the number of elements in the array.
  */
 size_t dsa_max_element(const void* arr, const size_t count, const size_t elem_size, int (*compare)(const void* a, const void* b));
 
