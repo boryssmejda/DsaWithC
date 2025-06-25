@@ -11,9 +11,9 @@ size_t dsa_find_if(
         return count;
     }
 
-    for (int i = 0; i < count; i++)
+    for (size_t i = 0; i < count; i++)
     {
-        const unsigned char* element = data + esize * i;
+        const unsigned char* element = (const unsigned char*)data + esize * i;
         if (compare(element))
         {
             return i;
@@ -34,9 +34,9 @@ size_t dsa_find_if_ctx(
         return count;
     }
 
-    for (int i = 0; i < count; i++)
+    for (size_t i = 0; i < count; i++)
     {
-        const unsigned char* element = data + esize * i;
+        const unsigned char* element = (const unsigned char*)data + esize * i;
         if (compare(element, ctx))
         {
             return i;

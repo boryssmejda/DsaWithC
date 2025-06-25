@@ -1,4 +1,5 @@
 add_library(utility STATIC
+    find_if.c
     for_each.c
     max_element.c
     min_element.c
