@@ -1,4 +1,6 @@
 add_library(utility STATIC
+    count_if.c
+    find_if_not.c
     find_if.c
     for_each.c
     max_element.c

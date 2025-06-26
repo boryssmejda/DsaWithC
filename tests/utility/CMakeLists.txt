@@ -1,8 +1,10 @@
 add_executable(test_utility
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_for_each.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_max_element.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_min_element.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_reverse.cpp
+    test_count_if.cpp
+    test_find_if_not.cpp
+    test_for_each.cpp
+    test_max_element.cpp
+    test_min_element.cpp
+    test_reverse.cpp
 )
 
 target_compile_features(test_utility PRIVATE cxx_std_23)
