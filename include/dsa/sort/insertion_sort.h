@@ -5,6 +5,8 @@ extern "C"
 {
 #endif
 
+#include "dsa/common/error_codes.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -36,17 +38,21 @@ extern "C"
  * @param[in] esize Size of a single element, in bytes.
  * @param[in] compare Comparison function used to determine order.
  *
- * @return 0 on success, -1 on failure (e.g., invalid input).
+ * @return @ref DSA_SUCCESS on success,
+ *         @ref DSA_INVALID_INPUT if the input is invalid (e.g., null pointer or zero count),
+ *         @ref DSA_ALLOC_FAILURE if temporary memory allocation fails.
  *
  * When the function returns, @p data contains the sorted elements.
  *
- * @note This is a stable sort: equal elements retain their original order.
+ * @note This function performs a stable sort: equal elements retain their original order.
+ *       The array is sorted in-place.
  *
- * @complexity Time: Best case O(n); Average/Worst case O(n²).
- * Space: O(1) — sorting is done in-place using constant auxiliary memory.
+ * @complexity
+ * Time: O(n) best case (already sorted), O(n²) average and worst case.
+ * Space: O(1) — in-place sort using constant auxiliary memory.
  */
 
-bool dsa_issort(
+dsa_error_code_t dsa_insertion_sort(
     void *data,
     const size_t size,
     const size_t esize,

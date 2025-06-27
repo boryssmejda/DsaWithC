@@ -23,7 +23,7 @@ TEST_CASE("dsa_strerror returns correct messages", "[dsa_strerror]")
 
     SECTION("Unknown error code returns fallback string")
     {
-        dsa_error_code unknown = (dsa_error_code)999;
+        const dsa_error_code_t unknown = (dsa_error_code_t)999;
         REQUIRE(std::strcmp(dsa_strerror(unknown), "Unknown error") == 0);
     }
 }

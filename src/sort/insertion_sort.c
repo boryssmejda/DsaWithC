@@ -3,15 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool dsa_issort(
-    void* data,
+dsa_error_code_t dsa_insertion_sort(
+    void* const data,
     const size_t size,
     const size_t esize,
     int (*compare)(const void* key1, const void* key2))
 {
     if (!data || !compare || esize == 0)
     {
-        return false;
+        return DSA_INVALID_INPUT;
     }
 
     char* arr = data;
@@ -21,7 +21,7 @@ bool dsa_issort(
 
     if (!key)
     {
-        return false;
+        return DSA_ALLOC_FAILURE;
     }
 
     // Repeatedly insert a key element among the sorted elements.
@@ -47,5 +47,5 @@ bool dsa_issort(
     }
 
     free(key);
-    return true;
+    return DSA_SUCCESS;
 }

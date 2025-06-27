@@ -67,7 +67,7 @@ TEST_CASE("dsa_for_each applies operation to each element", "[dsa_for_each]")
         std::array<int, 4> arr{1, 2, 3, 4};
         constexpr std::array<int, 4> expected{2, 3, 4, 5};
 
-        dsa_error_code code = dsa_for_each(arr.data(), arr.size(), sizeof(int), increment_int);
+        const dsa_error_code_t code = dsa_for_each(arr.data(), arr.size(), sizeof(int), increment_int);
         REQUIRE(code == DSA_SUCCESS);
         REQUIRE(arr == expected);
     }
@@ -81,7 +81,7 @@ TEST_CASE("dsa_for_each_ctx applies context-aware operation", "[dsa_for_each]")
         const std::array<int, 4> expected{10, 20, 30, 40};
         int factor = 10;
 
-        dsa_error_code code = dsa_for_each_ctx(arr.data(), arr.size(), sizeof(int), scale_int_with_factor, &factor);
+        const dsa_error_code_t code = dsa_for_each_ctx(arr.data(), arr.size(), sizeof(int), scale_int_with_factor, &factor);
         REQUIRE(code == DSA_SUCCESS);
         REQUIRE(arr == expected);
     }

@@ -33,7 +33,7 @@ extern "C"
  *
  * @details Performs ⌊n / 2⌋ swaps of entire elements (each of size @p elem_size).
  */
-dsa_error_code dsa_reverse(void* arr, const size_t count, const size_t elem_size);
+dsa_error_code_t dsa_reverse(void* arr, const size_t count, const size_t elem_size);
 
 #ifdef __cplusplus
 }
