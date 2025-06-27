@@ -1,6 +1,6 @@
 #include "dsa/common/error_codes.h"
 
-const char* dsa_strerror(const dsa_error_code code)
+const char* dsa_strerror(const dsa_error_code_t code)
 {
     switch (code)
     {

@@ -43,7 +43,7 @@ typedef void (*dsa_operation_with_context)(void* elem, void* ctx);
  *
  * @complexity O(n), where n is the number of elements.
  */
-dsa_error_code dsa_for_each(void* arr, const size_t count, const size_t elem_size, dsa_operation_no_context operation);
+dsa_error_code_t dsa_for_each(void* arr, const size_t count, const size_t elem_size, dsa_operation_no_context operation);
 
 /**
  * @brief Applies a user-provided operation with context to each element of an array.
@@ -65,7 +65,7 @@ dsa_error_code dsa_for_each(void* arr, const size_t count, const size_t elem_siz
  *
  * @complexity O(n), where n is the number of elements.
  */
-dsa_error_code dsa_for_each_ctx(void* arr, const size_t count, const size_t elem_size, dsa_operation_with_context operation, void* ctx);
+dsa_error_code_t dsa_for_each_ctx(void* arr, const size_t count, const size_t elem_size, dsa_operation_with_context operation, void* ctx);
 
 #ifdef __cplusplus
 }

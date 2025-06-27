@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-dsa_error_code dsa_reverse(void* const arr, const size_t count, const size_t elem_size)
+dsa_error_code_t dsa_reverse(void* const arr, const size_t count, const size_t elem_size)
 {
     if (!arr || count == 0 || elem_size == 0)
     {

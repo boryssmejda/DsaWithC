@@ -25,7 +25,7 @@ typedef enum
      * @brief Memory allocation failed during operation.
      */
     DSA_ALLOC_FAILURE = 2
-} dsa_error_code;
+} dsa_error_code_t;
 
 /**
  * @brief Returns a human-readable string for a given error code.
@@ -34,7 +34,7 @@ typedef enum
  * @return A constant, statically-allocated string describing the error.
  *         The returned string is not allocated on the heap and must not be freed by the caller.
  */
-const char* dsa_strerror(const dsa_error_code code);
+const char* dsa_strerror(const dsa_error_code_t code);
 
 #ifdef __cplusplus
 }

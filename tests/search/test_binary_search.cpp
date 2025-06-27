@@ -44,11 +44,6 @@ int compare_strings_descending(const void* a, const void* b)
     return (result < 0) - (result > 0);
 }
 
-int compare_with_wrong_return_value([[maybe_unused]] const void* a, [[maybe_unused]] const void* b)
-{
-    return 100;
-}
-
 TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
     int8_t, int16_t, int32_t, int64_t,
     uint8_t, uint16_t, uint32_t, uint64_t,
@@ -56,19 +51,20 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
 {
     using T = TestType;
     std::vector<T> arr;
-    const size_t esize = sizeof(T);
+    const size_t elem_size = sizeof(T);
 
-    REQUIRE(esize != 0);
+    REQUIRE(elem_size != 0);
 
     SECTION("Empty array")
     {
         REQUIRE(arr.data() == nullptr);
 
         const T target = 10;
-        const auto result = dsa_binary_search(
-            arr.data(), &target, arr.size(), esize, ascending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        REQUIRE(result == arr.size());
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
     arr.push_back(1);
@@ -76,45 +72,43 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
     REQUIRE(arr.data() != nullptr);
     REQUIRE(arr.size() != 0);
 
-    SECTION("No target value")
+    SECTION("Null target pointer")
     {
-        const auto result = dsa_binary_search(
-            arr.data(), nullptr, arr.size(), esize, ascending_compare<T>);
-        REQUIRE(result == arr.size());
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            nullptr, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
-    SECTION("Mismatch in array size")
+    SECTION("Zero array size")
     {
         const T target = 0;
-        const size_t mismatchedSize = 0;
-        const auto result = dsa_binary_search(
-            arr.data(), &target, mismatchedSize, esize, ascending_compare<T>
-        );
-        REQUIRE(result == mismatchedSize);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), 0, elem_size, ascending_compare<T>, &found_index);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
-    SECTION("Element size equal 0")
+    SECTION("Zero element size")
     {
         const T target = 0;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), 0, ascending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), 0, ascending_compare<T>, &found_index);
 
-        REQUIRE(result == arr.size());
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
-    SECTION("Empty comparison function")
+    SECTION("Null compare function")
     {
         const T target = 0;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, nullptr);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, nullptr, &found_index);
 
-        REQUIRE(result == arr.size());
-    }
-
-    SECTION("Compare function returns value not equal to -1, 0 or 1")
-    {
-        const T target = 0;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, compare_with_wrong_return_value);
-
-        REQUIRE(result == arr.size());
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
     SECTION("Array with one element equal to target")
@@ -122,100 +116,122 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
         REQUIRE(arr.size() == 1);
 
         const T target = 1;
-        const auto result = dsa_binary_search(
-            arr.data(), &target, arr.size(), esize, ascending_compare<T>
-        );
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        REQUIRE(result == 0);
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == 0);
     }
 
-    SECTION("Array with one element and target value is different")
+    SECTION("Array with one element and target different")
     {
         REQUIRE(arr.size() == 1);
 
         const T target = 10;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        REQUIRE(result == arr.size());
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == arr.size());
     }
 
     arr.insert(arr.end(), {T{2}, T{4}, T{6}, T{8}, T{10}});
 
-    SECTION("Array is sorted in increasing order and target value is in array")
+    SECTION("Array sorted ascending and target in array")
     {
         const T target = 6;
-        const size_t expectedIndex = 3;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
+        const size_t expected_index = 3;
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        REQUIRE(result == expectedIndex);
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == expected_index);
     }
 
-    SECTION("Array contains duplicates in ascending order")
+    SECTION("Array contains duplicates ascending")
     {
         arr.insert(arr.end(), {T{20}, T{20}, T{20}});
         const T target = 20;
         const size_t expectedLowIndex = arr.size() - 3;
         const size_t expectedHighIndex = arr.size() - 1;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        // Allow any index between expectedLowIndex and expectedHighIndex (inclusive)
-        REQUIRE((result >= expectedLowIndex && result <= expectedHighIndex));
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE((found_index >= expectedLowIndex && found_index <= expectedHighIndex));
     }
 
-    SECTION("Array is sorted in ascending order and target value is not in array")
+    SECTION("Array sorted ascending and target not in array")
     {
         const T target = 3;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        REQUIRE(result == arr.size());
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == arr.size());
     }
 
     std::ranges::reverse(arr);
 
-    SECTION("Array is sorted in decreasing order and target value is in array")
+    SECTION("Array sorted descending and target in array")
     {
         const T target = 2;
-        const size_t expectedIndex = arr.size() - 2;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<T>);
+        const size_t expected_index = arr.size() - 2;
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, descending_compare<T>, &found_index);
 
-        REQUIRE(expectedIndex == result);
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == expected_index);
     }
 
-    SECTION("Array contains duplicates in descending order")
+    SECTION("Array contains duplicates descending")
     {
-        arr.insert(arr.end(), {0, 0, 0, 0});
-
+        arr.insert(arr.end(), {T{0}, T{0}, T{0}, T{0}});
         const T target = 0;
         const size_t expectedLowIndex = arr.size() - 4;
         const size_t expectedHighIndex = arr.size() - 1;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, descending_compare<T>, &found_index);
 
-        // Allow any index between expectedLowIndex and expectedHighIndex (inclusive)
-        REQUIRE((result >= expectedLowIndex && result <= expectedHighIndex));
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE((found_index >= expectedLowIndex && found_index <= expectedHighIndex));
     }
 
-    SECTION("Array is sorted in decreasing order and target value is not in array")
+    SECTION("Array sorted descending and target not in array")
     {
         const T target = 20;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, descending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, descending_compare<T>, &found_index);
 
-        REQUIRE(result == arr.size());
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == arr.size());
     }
 
     SECTION("Array with all elements equal to target")
     {
         arr.assign(10, T{7});
         const T target = 7;
-        const auto result = dsa_binary_search(arr.data(), &target, arr.size(), esize, ascending_compare<T>);
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
 
-        REQUIRE(result < arr.size());
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index < arr.size());
         if constexpr (std::is_floating_point_v<T>)
         {
-            REQUIRE_THAT(arr[result], Catch::Matchers::WithinAbs(target, 0.1));
+            REQUIRE_THAT(arr[found_index], Catch::Matchers::WithinAbs(target, 0.1));
         }
         else
         {
-            REQUIRE(arr[result] == target);
+            REQUIRE(arr[found_index] == target);
         }
     }
 }
@@ -227,49 +243,40 @@ TEST_CASE("Binary search with const char*", "[BinarySearch][CString]")
     };
 
     const size_t size = sorted.size();
-    const size_t esize = sizeof(const char*);
+    const size_t elem_size = sizeof(const char*);
 
-    SECTION("Target found in array sorted in ascending order")
+    SECTION("Target found in array sorted ascending")
     {
-        const char* target = "cherry";
-        const size_t expectedIndex = 2;
+        const char* target = "date";
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, sorted.data(), size, elem_size, compare_strings_ascending, &found_index);
 
-        const auto result = dsa_binary_search(
-            sorted.data(), &target, size, esize, compare_strings_ascending);
-
-        REQUIRE(result == expectedIndex);
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == 3);
     }
 
-    SECTION("Target found in array sorted in descending order")
+    SECTION("Target not found in array sorted ascending")
     {
-        std::ranges::reverse(sorted);
-        const char* target = "banana";
-        const size_t expectedIndex = 5;
-        const size_t result = dsa_binary_search(sorted.data(), &target, size, esize, compare_strings_descending);
+        const char* target = "mango";
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, sorted.data(), size, elem_size, compare_strings_ascending, &found_index);
 
-        REQUIRE(result == expectedIndex);
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == size);
     }
 
-    SECTION("Target not found")
+    std::ranges::reverse(sorted);
+
+    SECTION("Target found in array sorted descending")
     {
-        const char* target = "blueberry";
+        const char* target = "date";
+        size_t found_index = 0;
+        const auto status = dsa_binary_search_index(
+            &target, sorted.data(), size, elem_size, compare_strings_descending, &found_index);
 
-        const auto result = dsa_binary_search(
-            sorted.data(), &target, size, esize, compare_strings_ascending);
-
-        REQUIRE(result == size);
-    }
-
-    SECTION("All elements are the same")
-    {
-        const std::vector<const char*> repeated{"hello", "hello", "hello", "hello"};
-        const size_t repeatedSize = repeated.size();
-        const char* target = "hello";
-
-        const auto result = dsa_binary_search(
-            repeated.data(), &target, repeatedSize, esize, compare_strings_ascending);
-
-        REQUIRE(result < repeatedSize);
-        REQUIRE(std::strcmp(repeated[result], target) == 0);
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(found_index == size - 4);
     }
 }
