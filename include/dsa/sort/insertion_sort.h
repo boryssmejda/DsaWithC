@@ -19,19 +19,19 @@ extern "C"
  * The function pointer @p compare specifies a user-defined
  * function to compare elements.
  *
- * The comparison function must follow the signature:
+ * The comparison function must have the following signature:
  * @code
  * int compare(const void* key1, const void* key2);
  * @endcode
  * and return:
- * - `1` if @p key1 is greater than @p key2
+ * - a **positive value** if @p key1 is greater than @p key2
  * - `0` if @p key1 is equal to @p key2
- * - `-1` if @p key1 is less than @p key2
+ * - a **negative value** if @p key1 is less than @p key2
  *
- * For a descending sort, @p compare should reverse the first and last cases:
- * - `1` if @p key1 is less than @p key2
+ * For descending order, @p compare should reverse the direction:
+ * - a **positive value** if @p key1 is less than @p key2
  * - `0` if @p key1 is equal to @p key2
- * - `-1` if @p key1 is greater than @p key2
+ * - a **negative value** if @p key1 is greater than @p key2
  *
  * @param[in,out] data Array of elements to sort.
  * @param[in] size Number of elements in @p data.
