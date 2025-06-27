@@ -43,36 +43,43 @@ int compare_point_x(const void* a, const void* b)
 }
 } // namespace
 
-TEST_CASE("dsa_max_element finds max element", "[dsa_max_element]")
+TEST_CASE("dsa_max_element_index finds max element", "[dsa_max_element_index]")
 {
     SECTION("max element in int array")
     {
         constexpr std::array<int, 5> arr{1, 5, 3, 4, 2};
+        size_t max_index = 0;
 
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(int), compare_int);
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(int), compare_int, &max_index);
 
+        REQUIRE(status == DSA_SUCCESS);
         REQUIRE(max_index == 1);
         REQUIRE(arr[max_index] == 5);
     }
 
     SECTION("max element in double array")
     {
-        constexpr double expected_max_value{3.3};
         constexpr std::array<double, 4> arr{1.1, 3.3, 2.2, 0.0};
-
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(double), compare_double);
-
-        REQUIRE(max_index == 1);
+        constexpr double expected_max_value{3.3};
         constexpr double tolerance{0.0001};
+
+        size_t max_index = 0;
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(double), compare_double, &max_index);
+
+        REQUIRE(status == DSA_SUCCESS);
+        REQUIRE(max_index == 1);
         REQUIRE_THAT(arr[max_index], Catch::Matchers::WithinAbs(expected_max_value, tolerance));
     }
 
     SECTION("max element in array of Points by x coordinate")
     {
-        constexpr Point expected_point{5, 1};
         constexpr std::array<Point, 3> arr{{{1, 2}, {5, 1}, {3, 4}}};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(Point), compare_point_x);
+        constexpr Point expected_point{5, 1};
 
+        size_t max_index = 0;
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(Point), compare_point_x, &max_index);
+
+        REQUIRE(status == DSA_SUCCESS);
         REQUIRE(max_index == 1);
         REQUIRE(arr[max_index] == expected_point);
     }
@@ -80,7 +87,11 @@ TEST_CASE("dsa_max_element finds max element", "[dsa_max_element]")
     SECTION("max element in single-element array")
     {
         constexpr std::array<int, 1> arr{42};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(int), compare_int);
+        size_t max_index = 0;
+
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(int), compare_int, &max_index);
+
+        REQUIRE(status == DSA_SUCCESS);
         REQUIRE(max_index == 0);
         REQUIRE(arr[max_index] == 42);
     }
@@ -88,7 +99,11 @@ TEST_CASE("dsa_max_element finds max element", "[dsa_max_element]")
     SECTION("max element with all equal elements returns index of the first max element")
     {
         constexpr std::array<int, 3> arr{7, 7, 7};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(int), compare_int);
+        size_t max_index = 0;
+
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(int), compare_int, &max_index);
+
+        REQUIRE(status == DSA_SUCCESS);
         REQUIRE(max_index == 0);
         REQUIRE(arr[max_index] == 7);
     }
@@ -96,7 +111,11 @@ TEST_CASE("dsa_max_element finds max element", "[dsa_max_element]")
     SECTION("max element in array with negative integers")
     {
         constexpr std::array<int, 5> arr{-10, -20, -5, -30, -1};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(int), compare_int);
+        size_t max_index = 0;
+
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(int), compare_int, &max_index);
+
+        REQUIRE(status == DSA_SUCCESS);
         REQUIRE(max_index == 4);
         REQUIRE(arr[max_index] == -1);
     }
@@ -105,45 +124,62 @@ TEST_CASE("dsa_max_element finds max element", "[dsa_max_element]")
     {
         constexpr std::array<double, 4> arr{-1.0, 0.0, 2.5, -3.5};
         constexpr double max_value{2.5};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(double), compare_double);
+
+        size_t max_index = 0;
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(double), compare_double, &max_index);
+
+        REQUIRE(status == DSA_SUCCESS);
         REQUIRE(max_index == 2);
         REQUIRE_THAT(arr[max_index], Catch::Matchers::WithinAbs(max_value, 0.0001));
     }
 }
 
-TEST_CASE("dsa_max_element with invalid input parameters", "[dsa_max_element]")
+TEST_CASE("dsa_max_element_index with invalid input parameters", "[dsa_max_element_index]")
 {
-    SECTION("Handling empty input array")
+    SECTION("Handling null array")
     {
-        const size_t count = 10;
-        const size_t max_index = dsa_max_element(nullptr, count, sizeof(int), compare_int);
-        REQUIRE(max_index == count);
+        size_t max_index = 999;
+        const auto status = dsa_max_element_index(nullptr, 10, sizeof(int), compare_int, &max_index);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
-    SECTION("Handling array size equal 0")
+    SECTION("Handling array size == 0")
     {
-        constexpr std::array<double, 3> arr{1.0, 2.0, 3.0};
-        const size_t max_index = dsa_max_element(arr.data(), 0, sizeof(double), compare_double);
-        REQUIRE(max_index == 0);
+        constexpr std::array<int, 3> arr{1, 2, 3};
+        size_t max_index = 999;
+
+        const auto status = dsa_max_element_index(arr.data(), 0, sizeof(int), compare_int, &max_index);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
-    SECTION("Handling invalid element size equal 0")
+    SECTION("Handling element size == 0")
     {
         constexpr std::array<double, 3> arr{1.0, 2.0, 3.0};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), 0, compare_double);
-        REQUIRE(max_index == arr.size());
+        size_t max_index = 999;
+
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), 0, compare_double, &max_index);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
     SECTION("Handling invalid compare function")
     {
-        std::array<int, 3> arr{3, 7, 10};
-        const size_t max_index = dsa_max_element(arr.data(), arr.size(), sizeof(int), nullptr);
-        REQUIRE(max_index == arr.size());
+        constexpr std::array<int, 3> arr{3, 7, 10};
+        size_t max_index = 999;
+
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(int), nullptr, &max_index);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 
-    SECTION("Handling nullptr and size 0 together")
+    SECTION("Handling null output index pointer")
     {
-        const size_t max_index = dsa_max_element(nullptr, 0, sizeof(int), compare_int);
-        REQUIRE(max_index == 0);
+        constexpr std::array<int, 3> arr{10, 20, 30};
+
+        const auto status = dsa_max_element_index(arr.data(), arr.size(), sizeof(int), compare_int, nullptr);
+
+        REQUIRE(status == DSA_INVALID_INPUT);
     }
 }

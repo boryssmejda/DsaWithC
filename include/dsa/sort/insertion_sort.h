@@ -15,7 +15,7 @@ extern "C"
  *
  * Uses insertion sort to sort the array of elements in @p data.
  * The number of elements is specified by @p size.
- * The size of each element is given by @p esize.
+ * The size of each element is given by @p elem_size.
  * The function pointer @p compare specifies a user-defined
  * function to compare elements.
  *
@@ -35,7 +35,7 @@ extern "C"
  *
  * @param[in,out] data Array of elements to sort.
  * @param[in] size Number of elements in @p data.
- * @param[in] esize Size of a single element, in bytes.
+ * @param[in] elem_size Size of a single element, in bytes.
  * @param[in] compare Comparison function used to determine order.
  *
  * @return @ref DSA_SUCCESS on success,
@@ -55,7 +55,7 @@ extern "C"
 dsa_error_code_t dsa_insertion_sort(
     void *data,
     const size_t size,
-    const size_t esize,
+    const size_t elem_size,
     int (*compare)(const void *key1, const void *key2));
 
 #ifdef __cplusplus
