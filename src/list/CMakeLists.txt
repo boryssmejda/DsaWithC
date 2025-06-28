@@ -1,5 +1,5 @@
 add_library(list STATIC
-    singly_linked_list.c
+    slist.c
 )
 
 target_include_directories(list PUBLIC
