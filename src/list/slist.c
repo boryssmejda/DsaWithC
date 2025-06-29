@@ -222,6 +222,55 @@ dsa_error_code_t dsa_slist_pop_back(slist_t handle)
     return DSA_SUCCESS;
 }
 
+dsa_error_code_t dsa_slist_clear(slist_t handle)
+{
+    if (!handle)
+    {
+        return DSA_INVALID_INPUT;
+    }
+
+    if (handle->size == 0)
+    {
+        return DSA_SUCCESS;
+    }
+
+    slist_node_t* current = handle->head;
+    while (current)
+    {
+        slist_node_t* next = current->next;
+        _delete_node(current, handle->destroy_func);
+        current = next;
+    }
+
+    handle->head = NULL;
+    handle->tail = NULL;
+    handle->size = 0;
+    return DSA_SUCCESS;
+}
+
+dsa_error_code_t dsa_slist_reverse(slist_t handle)
+{
+    if (!handle)
+    {
+        return DSA_INVALID_INPUT;
+    }
+
+    handle->tail = handle->head;
+    slist_node_t* current = handle->head;
+    slist_node_t* prev = NULL;
+    while (current)
+    {
+        slist_node_t* next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+
+    handle->head = prev;
+
+    return DSA_SUCCESS;
+}
+
 void dsa_slist_destroy(slist_t handle)
 {
     if (!handle)

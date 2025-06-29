@@ -137,6 +137,28 @@ dsa_error_code_t dsa_slist_pop_front(slist_t handle);
 dsa_error_code_t dsa_slist_pop_back(slist_t handle);
 
 /**
+ * @brief Removes all elements from the list, calling the destroy function if set.
+ *
+ * This operation runs in linear time O(n).
+ * After this call, the list is empty but still valid.
+ *
+ * @param[in] handle List handle.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` if the handle is NULL.
+ */
+dsa_error_code_t dsa_slist_clear(slist_t handle);
+
+/**
+ * @brief Reverses the order of elements in the singly linked list.
+ *
+ * This operation runs in linear time O(n) and modifies the list in place.
+ *
+ * @param[in] handle List handle.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` if the handle is NULL.
+ */
+dsa_error_code_t dsa_slist_reverse(slist_t handle);
+
+
+/**
  * @brief Destroys the list and frees its memory.
  *
  * If a destroy function was provided at creation, it will be called for each element.
