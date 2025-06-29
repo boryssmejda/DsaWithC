@@ -21,6 +21,11 @@ TEST_CASE("dsa_strerror returns correct messages", "[dsa_strerror]")
         REQUIRE(std::strcmp(dsa_strerror(DSA_ALLOC_FAILURE), "Allocation failure") == 0);
     }
 
+    SECTION("DSA_EMPTY_LIST")
+    {
+        REQUIRE(std::strcmp(dsa_strerror(DSA_EMPTY_LIST), "Empty List") == 0);
+    }
+
     SECTION("Unknown error code returns fallback string")
     {
         const dsa_error_code_t unknown = (dsa_error_code_t)999;

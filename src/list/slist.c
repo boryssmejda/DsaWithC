@@ -16,6 +16,21 @@ struct slist_t
     slist_destroy_element_func destroy_func;
 };
 
+static void _delete_node(slist_node_t* node, slist_destroy_element_func func)
+{
+    if (!node)
+    {
+        return;
+    }
+
+    if (func)
+    {
+        func(node->data);
+    }
+
+    free(node);
+}
+
 dsa_error_code_t dsa_slist_create(slist_t* handle, slist_destroy_element_func func)
 {
     if (!handle)
@@ -140,9 +155,72 @@ dsa_error_code_t dsa_slist_push_back(slist_t handle, void* data)
     return DSA_SUCCESS;
 }
 
-dsa_error_code_t dsa_slist_pop_front(slist_t handle);
+dsa_error_code_t dsa_slist_pop_front(slist_t handle)
+{
+    if (!handle)
+    {
+        return DSA_INVALID_INPUT;
+    }
 
-dsa_error_code_t dsa_slist_pop_back(slist_t handle);
+    if (handle->size == 0)
+    {
+        return DSA_EMPTY_LIST;
+    }
+
+    slist_node_t* node = handle->head;
+    handle->head = node->next;
+
+    _delete_node(node, handle->destroy_func);
+
+    --handle->size;
+
+    if (handle->size == 0)
+    {
+        handle->tail = NULL;
+    }
+
+    return DSA_SUCCESS;
+}
+
+dsa_error_code_t dsa_slist_pop_back(slist_t handle)
+{
+    if (!handle)
+    {
+        return DSA_INVALID_INPUT;
+    }
+
+    if (handle->size == 0)
+    {
+        return DSA_EMPTY_LIST;
+    }
+
+    if (handle->size == 1)
+    {
+        slist_node_t* node = handle->head;
+        _delete_node(node, handle->destroy_func);
+        handle->head = NULL;
+        handle->tail = NULL;
+        --handle->size;
+        return DSA_SUCCESS;
+    }
+
+    slist_node_t* current = handle->head;
+
+    while (current->next != handle->tail)
+    {
+        current = current->next;
+    }
+
+    slist_node_t* node = current->next;
+    current->next = NULL;
+    _delete_node(node, handle->destroy_func);
+
+    --handle->size;
+
+    handle->tail = current;
+
+    return DSA_SUCCESS;
+}
 
 void dsa_slist_destroy(slist_t handle)
 {
@@ -155,12 +233,7 @@ void dsa_slist_destroy(slist_t handle)
     while (current)
     {
         slist_node_t* next = current->next;
-        if (handle->destroy_func)
-        {
-            handle->destroy_func(current->data);
-        }
-
-        free(current);
+        _delete_node(current, handle->destroy_func);
         current = next;
     }
 

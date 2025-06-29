@@ -24,7 +24,12 @@ typedef enum
     /**
      * @brief Memory allocation failed during operation.
      */
-    DSA_ALLOC_FAILURE = 2
+    DSA_ALLOC_FAILURE = 2,
+
+    /**
+     * @brief Attempted an operation (e.g., pop, front) on an empty list.
+     */
+    DSA_EMPTY_LIST = 3,
 } dsa_error_code_t;
 
 /**
