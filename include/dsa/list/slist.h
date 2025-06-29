@@ -88,12 +88,52 @@ dsa_error_code_t dsa_slist_get_size(slist_t handle, size_t* size);
  */
 dsa_error_code_t dsa_slist_is_empty(slist_t handle, bool* is_empty);
 
+/**
+ * @brief Inserts a new element at the front of the list.
+ *
+ * This operation runs in constant time O(1).
+ *
+ * @param[in] handle List handle.
+ * @param[in] data Pointer to the data to insert. Must not be NULL.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments,
+ *         or `DSA_ALLOC_FAILURE` if memory allocation fails.
+ */
 dsa_error_code_t dsa_slist_push_front(slist_t handle, void* data);
 
+/**
+ * @brief Inserts a new element at the back of the list.
+ *
+ * This operation runs in constant time O(1).
+ *
+ * @param[in] handle List handle.
+ * @param[in] data Pointer to the data to insert. Must not be NULL.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments,
+ *         or `DSA_ALLOC_FAILURE` if memory allocation fails.
+ */
 dsa_error_code_t dsa_slist_push_back(slist_t handle, void* data);
 
+/**
+ * @brief Removes the element at the front of the list.
+ *
+ * This operation runs in constant time O(1).
+ * If a destroy function was provided at list creation, it is called on the removed element's data.
+ *
+ * @param[in] handle List handle.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments,
+ *         or `DSA_EMPTY_LIST` if the list is empty.
+ */
 dsa_error_code_t dsa_slist_pop_front(slist_t handle);
 
+/**
+ * @brief Removes the element at the back of the list.
+ *
+ * This operation runs in linear time O(n), since the list must be traversed to find the second-last node.
+ * If a destroy function was provided at list creation, it is called on the removed element's data.
+ *
+ * @param[in] handle List handle.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments,
+ *         or `DSA_EMPTY_LIST` if the list is empty.
+ */
 dsa_error_code_t dsa_slist_pop_back(slist_t handle);
 
 /**
