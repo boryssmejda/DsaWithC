@@ -49,6 +49,29 @@ dsa_error_code_t dsa_slist_get_head(slist_t handle, void** head)
     return DSA_SUCCESS;
 }
 
+dsa_error_code_t dsa_slist_get_tail(slist_t handle, void** tail)
+{
+    if (!handle || !tail)
+    {
+        return DSA_INVALID_INPUT;
+    }
+
+    *tail = handle->tail;
+
+    return DSA_SUCCESS;
+}
+
+dsa_error_code_t dsa_slist_is_empty(slist_t handle, bool* is_empty)
+{
+    if (!handle || !is_empty)
+    {
+        return DSA_INVALID_INPUT;
+    }
+
+    *is_empty = (handle->size == 0);
+    return DSA_SUCCESS;
+}
+
 dsa_error_code_t dsa_slist_get_size(slist_t handle, size_t* size)
 {
     if (!handle || !size)

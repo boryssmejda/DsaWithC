@@ -10,6 +10,9 @@
 
 #include "dsa/common/error_codes.h"
 
+#include <stdbool.h>
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -55,6 +58,15 @@ dsa_error_code_t dsa_slist_create(slist_t* handle, slist_destroy_element_func fu
 dsa_error_code_t dsa_slist_get_head(slist_t handle, void** head);
 
 /**
+ * @brief Retrieves the data stored in the tail node of the list.
+ *
+ * @param[in] handle List handle.
+ * @param[out] head Pointer to the tail data. Set to NULL if the list is empty.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` if arguments are invalid.
+ */
+dsa_error_code_t dsa_slist_get_tail(slist_t handle, void** tail);
+
+/**
  * @brief Gets the number of elements in the list.
  *
  * This operation runs in constant time O(1).
@@ -64,6 +76,17 @@ dsa_error_code_t dsa_slist_get_head(slist_t handle, void** head);
  * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments.
  */
 dsa_error_code_t dsa_slist_get_size(slist_t handle, size_t* size);
+
+/**
+ * @brief Checks whether the list is empty.
+ *
+ * This operation runs in constant time (O(1)).
+ *
+ * @param[in] handle List handle.
+ * @param[out] is_empty Pointer to a boolean that will be set to true if the list is empty, false otherwise.
+ * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` if arguments are invalid.
+ */
+dsa_error_code_t dsa_slist_is_empty(slist_t handle, bool* is_empty);
 
 /**
  * @brief Destroys the list and frees its memory.
