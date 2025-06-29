@@ -61,7 +61,7 @@ dsa_error_code_t dsa_slist_get_head(slist_t handle, void** head);
  * @brief Retrieves the data stored in the tail node of the list.
  *
  * @param[in] handle List handle.
- * @param[out] head Pointer to the tail data. Set to NULL if the list is empty.
+ * @param[out] tail Pointer to the tail data. Set to NULL if the list is empty.
  * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` if arguments are invalid.
  */
 dsa_error_code_t dsa_slist_get_tail(slist_t handle, void** tail);
@@ -87,6 +87,14 @@ dsa_error_code_t dsa_slist_get_size(slist_t handle, size_t* size);
  * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` if arguments are invalid.
  */
 dsa_error_code_t dsa_slist_is_empty(slist_t handle, bool* is_empty);
+
+dsa_error_code_t dsa_slist_push_front(slist_t handle, void* data);
+
+dsa_error_code_t dsa_slist_push_back(slist_t handle, void* data);
+
+dsa_error_code_t dsa_slist_pop_front(slist_t handle);
+
+dsa_error_code_t dsa_slist_pop_back(slist_t handle);
 
 /**
  * @brief Destroys the list and frees its memory.
