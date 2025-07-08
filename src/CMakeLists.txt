@@ -1,4 +1,5 @@
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/common)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/list)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/numeric)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/search)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/sort)
@@ -6,6 +7,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utility)
 
 add_library(dsa
     $<TARGET_OBJECTS:common>
+    $<TARGET_OBJECTS:list>
     $<TARGET_OBJECTS:numeric>
     $<TARGET_OBJECTS:search>
     $<TARGET_OBJECTS:sort>
