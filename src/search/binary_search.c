@@ -22,11 +22,11 @@ dsa_error_code_t dsa_binary_search_index(
         const size_t middle = left + (right - left) / 2;
 
         const int comparison_result = compare(target, &buffer[middle * elem_size]);
-        if (comparison_result < 0)
+        if (comparison_result > 0)
         {
             left = middle + 1;
         }
-        else if (comparison_result > 0)
+        else if (comparison_result < 0)
         {
             right = middle;
         }
