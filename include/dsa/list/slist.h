@@ -22,12 +22,12 @@ extern "C" {
  *
  * Users should treat this as an abstract handle and not access its fields directly.
  */
-struct slist_t;
+struct slist;
 
 /**
  * @brief Handle to a singly linked list.
  */
-typedef struct slist_t* slist_t;
+typedef struct slist* slist_t;
 
 /**
  * @brief Function pointer type for destroying list elements.

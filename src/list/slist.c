@@ -8,7 +8,7 @@ typedef struct slist_node_t
     struct slist_node_t* next;
 }slist_node_t;
 
-struct slist_t
+struct slist
 {
     slist_node_t* head;
     slist_node_t* tail;
