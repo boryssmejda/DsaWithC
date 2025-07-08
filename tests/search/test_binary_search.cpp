@@ -23,7 +23,7 @@ int descending_compare(const void* a, const void* b)
     const T* lhs = static_cast<const T*>(a);
     const T* rhs = static_cast<const T*>(b);
 
-    return (*rhs > *lhs) - (*rhs < *lhs);
+    return (*lhs < *rhs) - (*lhs > *rhs);
 }
 
 int compare_strings_ascending(const void* a, const void* b)
@@ -153,10 +153,10 @@ TEMPLATE_TEST_CASE("Binary search test", "[BinarySearch][template]",
 
     SECTION("Array contains duplicates ascending")
     {
-        arr.insert(arr.end(), {T{20}, T{20}, T{20}});
+        arr.insert(arr.end(), {T{20}, T{20}, T{20}, T{21}});
         const T target = 20;
-        const size_t expectedLowIndex = arr.size() - 3;
-        const size_t expectedHighIndex = arr.size() - 1;
+        const size_t expectedLowIndex = arr.size() - 4;
+        const size_t expectedHighIndex = arr.size() - 2;
         size_t found_index = 0;
         const auto status = dsa_binary_search_index(
             &target, arr.data(), arr.size(), elem_size, ascending_compare<T>, &found_index);
