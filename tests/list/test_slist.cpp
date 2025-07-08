@@ -48,6 +48,17 @@ TEST_CASE("Push front and back, get head and tail")
     dsa_slist_destroy(list);
 }
 
+TEST_CASE("Pushing NULL data pointer is an error")
+{
+    slist_t list = nullptr;
+    REQUIRE(dsa_slist_create(&list, nullptr) == DSA_SUCCESS);
+
+    REQUIRE(dsa_slist_push_front(list, NULL) == DSA_INVALID_INPUT);
+    REQUIRE(dsa_slist_push_back(list, NULL) == DSA_INVALID_INPUT);
+
+    dsa_slist_destroy(list);
+}
+
 TEST_CASE("Check size and is_empty")
 {
     slist_t list = nullptr;
