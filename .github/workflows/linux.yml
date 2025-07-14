@@ -13,7 +13,14 @@ jobs:
         build_type: [Debug, Release]
         compiler: [
           { CXX: g++-11, C: gcc-11 },
+          { CXX: g++-12, C: gcc-12 },
+          { CXX: g++-13, C: gcc-13 },
+          { CXX: g++-14, C: gcc-14 },
+          { CXX: g++-15, C: gcc-15 },
           { CXX: clang++-17, C: clang-17 },
+          { CXX: clang++-18, C: clang-18 },
+          { CXX: clang++-19, C: clang-19 },
+          { CXX: clang++-20, C: clang-20 },
         ]
 
     steps:
