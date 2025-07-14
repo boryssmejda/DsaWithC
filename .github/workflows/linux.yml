@@ -18,13 +18,18 @@ jobs:
       - name: Configure CMake for ${{ matrix.build_type }}
         run: |
           cmake \
-            -S ${{ github.workspace }} \
-            -B ${{ github.workspace }}/build_${{ matrix.build_type }} \
+            -S "${{ github.workspace }}" \
+            -B "${{ github.workspace }}/build_${{ matrix.build_type }}" \
+            -DDSA_ENABLE_TESTING=ON \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build ${{ matrix.build_type }}
         run: |
           cmake \
-            --build ${{ github.workspace }}/build_${{ matrix.build_type }} \
-            --config ${{ matrix.build_type }} \
+            --build "${{ github.workspace }}/build_${{ matrix.build_type }}" \
+            --config "${{ matrix.build_type }}" \
             --parallel $(nproc)
+
+      - name: Run tests
+        working-directory: ${{ github.workspace }}/build_${{ matrix.build_type }}
+        run: ctest --output-on-failure
