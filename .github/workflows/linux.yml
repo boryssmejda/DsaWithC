@@ -9,19 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Configure CMake
-      run: |
-        cmake
-          -S ${{github.workspace}} \
-          -B ${{github.workspace}}/build \
-          -DCMAKE_BUILD_TYPE=RELEASE
+      - name: Configure CMake
+        run: |
+          cmake
+            -S ${{github.workspace}} \
+            -B ${{github.workspace}}/build \
+            -DCMAKE_BUILD_TYPE=RELEASE
 
-    - name: Build Release
-      run: |
-        cmake
-          --build ${{github.workspace}}/build
-          --config Release
-          --parallel $(nproc)
+      - name: Build Release
+        run: |
+          cmake
+            --build ${{github.workspace}}/build
+            --config Release
+            --parallel $(nproc)
