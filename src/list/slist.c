@@ -38,7 +38,7 @@ dsa_error_code_t dsa_slist_create(slist_t* handle, slist_destroy_element_func fu
         return DSA_INVALID_INPUT;
     }
 
-    *handle = malloc(sizeof(slist_t));
+    *handle = malloc(sizeof(**handle));
 
     if (!(*handle))
     {
