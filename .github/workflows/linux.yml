@@ -8,20 +8,23 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure CMake
+      - name: Configure CMake for ${{ matrix.build_type }}
         run: |
           cmake \
             -S ${{ github.workspace }} \
-            -B ${{ github.workspace }}/build \
-            -DCMAKE_BUILD_TYPE=RELEASE
+            -B ${{ github.workspace }}/build_${{ matrix.build_type }} \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
-      - name: Build Release
+      - name: Build ${{ matrix.build_type }}
         run: |
           cmake \
-            --build ${{ github.workspace }}/build \
-            --config Release \
+            --build ${{ github.workspace }}/build_${{ matrix.build_type }} \
+            --config ${{ matrix.build_type }} \
             --parallel $(nproc)
