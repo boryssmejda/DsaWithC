@@ -19,7 +19,6 @@ jobs:
           { CXX: clang++-17, C: clang-17 },
           { CXX: clang++-18, C: clang-18 },
           { CXX: clang++-19, C: clang-19 },
-          { CXX: clang++-20, C: clang-20 },
         ]
 
     steps:
