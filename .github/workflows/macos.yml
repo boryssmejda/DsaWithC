@@ -18,6 +18,12 @@ jobs:
       BUILD_DIR: ${{ github.workspace }}/build_${{ matrix.build_type }}
 
     steps:
+      - name: Print system info
+        run: |
+          sw_vers
+          date
+          sysctl -n hw.logicalcpu
+
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
