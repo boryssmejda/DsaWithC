@@ -33,6 +33,7 @@ jobs:
       - name: Install compilers
         run: |
           echo "::group::Install compilers"
+          set -e
           sudo apt-get update
           sudo apt-get install -y software-properties-common
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -72,3 +73,10 @@ jobs:
           ctest \
             --build-config "${{ matrix.build_type }}" \
             --output-on-failure
+
+      - name: Archive test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.compiler.CXX }}-${{ matrix.build_type }}
+          path: ${{ env.BUILD_DIR }}/Testing/Temporary

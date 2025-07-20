@@ -58,3 +58,10 @@ jobs:
           ctest \
             --build-config "${{ matrix.build_type }}" \
             --output-on-failure
+
+      - name: Archive test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.os }}-${{ matrix.build_type }}
+          path: ${{ env.BUILD_DIR }}/Testing/Temporary
