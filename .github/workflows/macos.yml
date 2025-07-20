@@ -40,5 +40,5 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: |
           ctest \
-            --build-config ${{ matrix.build_type }}
+            --build-config ${{ matrix.build_type }} \
             --output-on-failure
