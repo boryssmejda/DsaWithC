@@ -24,6 +24,10 @@ jobs:
       BUILD_DIR: ${{ github.workspace }}/build_${{ matrix.build_type }}
 
     steps:
+      steps:
+      - name: Print build dir
+        run: echo "Build directory: $BUILD_DIR"
+
       - name: Install compilers
         run: |
           sudo apt update
@@ -53,5 +57,5 @@ jobs:
             --parallel $(nproc)
 
       - name: Run tests
-        working-directory: $BUILD_DIR
+        working-directory: ${{ env.BUILD_DIR }}
         run: ctest --output-on-failure
