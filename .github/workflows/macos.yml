@@ -7,16 +7,22 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
+        os: [macos-13, macos-14, macos-15]
         build_type: [Debug, Release]
         build_shared_libs: ["OFF"]
+    runs-on: ${{ matrix.os }}
     env:
       BUILD_DIR: ${{ github.workspace }}/build_${{ matrix.build_type }}
 
     steps:
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.0.3'
+
       - uses: actions/checkout@v4
 
       - name: Configure CMake for ${{ matrix.build_type }}
@@ -40,5 +46,5 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: |
           ctest \
-            --build-config ${{ matrix.build_type }} \
+            --build-config "${{ matrix.build_type }}" \
             --output-on-failure
