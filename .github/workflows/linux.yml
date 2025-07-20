@@ -20,6 +20,8 @@ jobs:
           { CXX: clang++-18, C: clang-18 },
           { CXX: clang++-19, C: clang-19 },
         ]
+    env:
+      BUILD_DIR: ${{ github.workspace }}/build_${{ matrix.build_type }}
 
     steps:
       - name: Install compilers
@@ -39,17 +41,17 @@ jobs:
         run: |
           cmake \
             -S "${{ github.workspace }}" \
-            -B "${{ github.workspace }}/build_${{ matrix.build_type }}" \
+            -B "$BUILD_DIR" \
             -DDSA_ENABLE_TESTING=ON \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build ${{ matrix.build_type }}
         run: |
           cmake \
-            --build "${{ github.workspace }}/build_${{ matrix.build_type }}" \
+            --build "$BUILD_DIR" \
             --config "${{ matrix.build_type }}" \
             --parallel $(nproc)
 
       - name: Run tests
-        working-directory: ${{ github.workspace }}/build_${{ matrix.build_type }}
+        working-directory: $BUILD_DIR
         run: ctest --output-on-failure
