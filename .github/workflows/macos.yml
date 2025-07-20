@@ -30,10 +30,11 @@ jobs:
 
       - name: Build ${{ matrix.build_type }}
         run: |
+          threads=$(sysctl -n hw.logicalcpu)
           cmake \
             --build "$BUILD_DIR" \
             --config "${{ matrix.build_type }}" \
-            --parallel $(nproc)
+            --parallel "$threads"
 
       - name: Run tests
         working-directory: ${{ env.BUILD_DIR }}
