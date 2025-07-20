@@ -10,7 +10,9 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
+        fail-fast: false
         build_type: [Debug, Release]
+        build_shared_libs: ["OFF"]
     env:
       BUILD_DIR: ${{ github.workspace }}/build_${{ matrix.build_type }}
 
@@ -22,6 +24,7 @@ jobs:
           cmake \
             -S "${{ github.workspace }}" \
             -B "$BUILD_DIR" \
+            -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
             -DDSA_ENABLE_TESTING=ON \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
@@ -34,4 +37,7 @@ jobs:
 
       - name: Run tests
         working-directory: ${{ env.BUILD_DIR }}
-        run: ctest --output-on-failure
+        run: |
+          ctest \
+            --config ${{ matrix.build_type }}
+            --output-on-failure
