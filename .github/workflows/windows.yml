@@ -32,20 +32,20 @@ jobs:
       - name: Configure CMake for ${{ matrix.build_type }}
         shell: bash
         run: >
-          cmake
-            -S "${{ github.workspace }}"
-            -B "${{ env.BUILD_DIR }}"
-            -G "Visual Studio 17 2022"
-            -A x64
-            -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}"
-            -DDSA_ENABLE_TESTING=ON
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          cmake \
+            -S "${{ github.workspace }}" \
+            -B "${{ env.BUILD_DIR }}" \
+            -G "Visual Studio 17 2022" \
+            -A x64 \
+            -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
+            -DDSA_ENABLE_TESTING=ON \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
 
       - name: Build ${{ matrix.build_type }}
         shell: bash
         run: >
-          cmake
-            --build "$BUILD_DIR"
+          cmake \
+            --build "$BUILD_DIR" \
             --config "${{ matrix.build_type }}"
             --parallel $env:NUMBER_OF_PROCESSORS
 
@@ -53,8 +53,8 @@ jobs:
         shell: bash
         working-directory: ${{ env.BUILD_DIR }}
         run: >
-          ctest
-            --build-config "${{ matrix.build_type }}"
+          ctest \
+            --build-config "${{ matrix.build_type }}" \
             --output-on-failure
 
       - name: Archive test logs on failure
