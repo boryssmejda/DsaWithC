@@ -25,12 +25,17 @@ TEST_CASE("Push front and back, get head and tail")
 {
     slist_t list = nullptr;
     REQUIRE(dsa_slist_create(&list, nullptr) == DSA_SUCCESS);
+    REQUIRE(list != nullptr);
 
     const char* val1 = "first";
     const char* val2 = "second";
 
     REQUIRE(dsa_slist_push_front(list, (void*)val1) == DSA_SUCCESS);
     REQUIRE(dsa_slist_push_back(list, (void*)val2) == DSA_SUCCESS);
+
+    std::size_t size = 0;
+    REQUIRE(dsa_slist_get_size(list, &size) == DSA_SUCCESS);
+    REQUIRE(size == 2);
 
     void* head = nullptr;
     void* tail = nullptr;
@@ -39,6 +44,17 @@ TEST_CASE("Push front and back, get head and tail")
 
     REQUIRE(strcmp(static_cast<const char*>(head), val1) == 0);
     REQUIRE(strcmp(static_cast<const char*>(tail), val2) == 0);
+
+    dsa_slist_destroy(list);
+}
+
+TEST_CASE("Pushing NULL data pointer is an error")
+{
+    slist_t list = nullptr;
+    REQUIRE(dsa_slist_create(&list, nullptr) == DSA_SUCCESS);
+
+    REQUIRE(dsa_slist_push_front(list, NULL) == DSA_INVALID_INPUT);
+    REQUIRE(dsa_slist_push_back(list, NULL) == DSA_INVALID_INPUT);
 
     dsa_slist_destroy(list);
 }

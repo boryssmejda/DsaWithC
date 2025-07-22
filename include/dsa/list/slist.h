@@ -4,6 +4,9 @@
  *
  * This module provides an abstract singly linked list implementation in C.
  * It supports optional ownership of elements via a destroy callback.
+ *
+ * @note This implementation is **not thread-safe**. It is designed for single-threaded use.
+ *       If you need to use it in a multithreaded context, external synchronization is required.
  */
 
 #pragma once
@@ -75,7 +78,7 @@ dsa_error_code_t dsa_slist_get_tail(slist_t handle, void** tail);
  * @param[out] size Pointer to the variable that will receive the list size.
  * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments.
  */
-dsa_error_code_t dsa_slist_get_size(slist_t handle, size_t* size);
+dsa_error_code_t dsa_slist_get_size(const slist_t handle, size_t* size);
 
 /**
  * @brief Checks whether the list is empty.
@@ -95,6 +98,7 @@ dsa_error_code_t dsa_slist_is_empty(slist_t handle, bool* is_empty);
  *
  * @param[in] handle List handle.
  * @param[in] data Pointer to the data to insert. Must not be NULL.
+ *                 Passing NULL as data will result in `DSA_INVALID_INPUT`.
  * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments,
  *         or `DSA_ALLOC_FAILURE` if memory allocation fails.
  */
@@ -107,6 +111,7 @@ dsa_error_code_t dsa_slist_push_front(slist_t handle, void* data);
  *
  * @param[in] handle List handle.
  * @param[in] data Pointer to the data to insert. Must not be NULL.
+ *                 Passing NULL as data will result in `DSA_INVALID_INPUT`.
  * @return `DSA_SUCCESS` on success, `DSA_INVALID_INPUT` on bad arguments,
  *         or `DSA_ALLOC_FAILURE` if memory allocation fails.
  */
