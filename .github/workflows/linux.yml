@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -40,6 +40,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ${{ matrix.compiler.C }} ${{ matrix.compiler.CXX }}
           echo "::endgroup::"
+
+      - name: Print compiler version
+        run: |
+          ${{ matrix.compiler.C }} --version
+          ${{ matrix.compiler.CXX }} --version
 
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2

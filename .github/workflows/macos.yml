@@ -28,6 +28,10 @@ jobs:
           date
           sysctl -n hw.logicalcpu
 
+      - name: Print compiler version
+        run: |
+          clang --version || gcc --version
+
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
@@ -63,5 +67,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs-${{ matrix.os }}-${{ matrix.build_type }}
+          name: test-logs-${{ matrix.os }}-${{ matrix.build_type }}-${{ github.ref_name }}
           path: ${{ env.BUILD_DIR }}/Testing/Temporary
