@@ -49,7 +49,7 @@ TEST_CASE("Non-polynomial function: sin(x)", "[root_newton]")
 
     size_t n = x.size();
     REQUIRE(dsa_find_root_newton(f, g, x.data(), &n, delta) == DSA_ROOT_SUCCESS);
-    REQUIRE_THAT(x[n - 1], Catch::Matchers::WithinAbs(std::numbers::pi_v, delta));
+    REQUIRE_THAT(x[n - 1], Catch::Matchers::WithinAbs(std::numbers::pi_v<double>, delta));
 }
 
 TEST_CASE("Maximum number of iterations exceeded", "[root_newton]")
