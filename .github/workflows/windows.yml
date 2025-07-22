@@ -38,8 +38,7 @@ jobs:
             -G "Visual Studio 17 2022" \
             -A x64 \
             -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
-            -DDSA_ENABLE_TESTING=ON \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DDSA_ENABLE_TESTING=ON
 
       - name: Build ${{ matrix.build_type }}
         shell: bash
