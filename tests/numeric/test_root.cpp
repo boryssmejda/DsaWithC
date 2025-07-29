@@ -2,6 +2,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include <array>
+#include <cmath>
 #include <numbers>
 
 #include "dsa/numeric/root.h"
@@ -43,8 +44,8 @@ TEST_CASE("Solving simple quadratic equation with 2 real solutions", "[root_newt
 
 TEST_CASE("Non-polynomial function: sin(x)", "[root_newton]")
 {
-    auto f = [](double x) { return sin(x); };
-    auto g = [](double x) { return cos(x); };
+    auto f = [](double x) { return std::sin(x); };
+    auto g = [](double x) { return std::cos(x); };
     std::array<double, 20> x{3.0}; // near pi
 
     size_t n = x.size();
