@@ -46,7 +46,7 @@ jobs:
           cmake \
             --build "$BUILD_DIR" \
             --config "${{ matrix.build_type }}" \
-            --parallel $env:NUMBER_OF_PROCESSORS
+            --parallel ${NUMBER_OF_PROCESSORS}
 
       - name: Run tests
         shell: bash
