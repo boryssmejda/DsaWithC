@@ -3,6 +3,7 @@
 
 #include <array>
 #include <cmath>
+#include <numbers>
 
 #include "dsa/numeric/root.h"
 
@@ -43,13 +44,13 @@ TEST_CASE("Solving simple quadratic equation with 2 real solutions", "[root_newt
 
 TEST_CASE("Non-polynomial function: sin(x)", "[root_newton]")
 {
-    auto f = [](double x) { return sin(x); };
-    auto g = [](double x) { return cos(x); };
+    auto f = [](double x) { return std::sin(x); };
+    auto g = [](double x) { return std::cos(x); };
     std::array<double, 20> x{3.0}; // near pi
 
     size_t n = x.size();
     REQUIRE(dsa_find_root_newton(f, g, x.data(), &n, delta) == DSA_ROOT_SUCCESS);
-    REQUIRE_THAT(x[n - 1], Catch::Matchers::WithinAbs(M_PI, delta));
+    REQUIRE_THAT(x[n - 1], Catch::Matchers::WithinAbs(std::numbers::pi_v<double>, delta));
 }
 
 TEST_CASE("Maximum number of iterations exceeded", "[root_newton]")

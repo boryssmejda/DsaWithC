@@ -1,0 +1,64 @@
+name: Windows Build
+
+on: [push, pull_request]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: ["Debug", "Release"]
+        build_shared_libs: ["OFF"]
+
+    env:
+      BUILD_DIR: ${{ github.workspace }}\\build_${{ matrix.build_type }}
+
+    steps:
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.0.3'
+
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake for ${{ matrix.build_type }}
+        shell: bash
+        run: >
+          cmake \
+            -S "${{ github.workspace }}" \
+            -B "${{ env.BUILD_DIR }}" \
+            -G "Visual Studio 17 2022" \
+            -A x64 \
+            -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
+            -DDSA_ENABLE_TESTING=ON
+
+      - name: Build ${{ matrix.build_type }}
+        shell: bash
+        run: >
+          cmake \
+            --build "$BUILD_DIR" \
+            --config "${{ matrix.build_type }}" \
+            --parallel ${NUMBER_OF_PROCESSORS}
+
+      - name: Run tests
+        shell: bash
+        working-directory: ${{ env.BUILD_DIR }}
+        run: >
+          ctest \
+            --build-config "${{ matrix.build_type }}" \
+            --output-on-failure
+
+      - name: Archive test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.build_type }}-build_shared_libs-${{ matrix.build_shared_libs }}
+          path: ${{ env.BUILD_DIR }}/Testing/Temporary
