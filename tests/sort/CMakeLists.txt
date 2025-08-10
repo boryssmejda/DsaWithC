@@ -10,4 +10,5 @@ target_link_libraries(test_sort
         Catch2::Catch2WithMain
 )
 
-catch_discover_tests(test_sort PROPERTIES LABELS "unit_tests")
+add_test(NAME test_sort COMMAND test_sort)
+set_tests_properties(test_sort PROPERTIES LABELS "unit_tests")

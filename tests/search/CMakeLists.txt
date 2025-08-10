@@ -10,4 +10,5 @@ target_link_libraries(test_search
         Catch2::Catch2WithMain
 )
 
-catch_discover_tests(test_search PROPERTIES LABELS "unit_tests")
+add_test(NAME test_search COMMAND test_search)
+set_tests_properties(test_search PROPERTIES LABELS "unit_tests")
