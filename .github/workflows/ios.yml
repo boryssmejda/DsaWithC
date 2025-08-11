@@ -36,7 +36,6 @@ jobs:
             -S "${{ github.workspace }}" \
             -B "$BUILD_DIR" \
             -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
-            -DDSA_ENABLE_TESTING=ON \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build ${{ matrix.build_type }}
