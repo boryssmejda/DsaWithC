@@ -42,6 +42,7 @@ jobs:
       - name: Configure CMake for ${{ matrix.build_type }}
         run: |
           cmake \
+            -GXcode \
             -S "${{ github.workspace }}" \
             -B "$BUILD_DIR" \
             -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
