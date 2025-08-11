@@ -31,7 +31,7 @@ jobs:
       - name: Configure CMake for ${{ matrix.build_type }}
         run: |
           cmake \
-	    -GXcode \
+            -GXcode \
             -DCMAKE_SYSTEM_NAME=iOS \
             -S "${{ github.workspace }}" \
             -B "$BUILD_DIR" \
