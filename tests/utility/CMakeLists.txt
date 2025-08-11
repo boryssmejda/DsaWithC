@@ -13,4 +13,5 @@ target_link_libraries(test_utility
         Catch2::Catch2WithMain
 )
 
-catch_discover_tests(test_utility PROPERTIES LABELS "unit_tests")
+add_test(NAME test_utility COMMAND test_utility)
+set_tests_properties(test_utility PROPERTIES LABELS "unit_tests")
