@@ -1,0 +1,48 @@
+name: iOS Build
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+        build_shared_libs: ["OFF"]
+    runs-on: macos-15
+    env:
+      BUILD_DIR: ${{ github.workspace }}/build_${{ matrix.build_type }}
+
+    steps:
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '4.0.3'
+
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake for ${{ matrix.build_type }}
+        run: |
+          cmake \
+	    -GXcode \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -S "${{ github.workspace }}" \
+            -B "$BUILD_DIR" \
+            -DBUILD_SHARED_LIBS="${{ matrix.build_shared_libs }}" \
+            -DDSA_ENABLE_TESTING=ON \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build ${{ matrix.build_type }}
+        run: |
+          threads=$(sysctl -n hw.logicalcpu)
+          cmake \
+            --build "$BUILD_DIR" \
+            --config "${{ matrix.build_type }}" \
+            --parallel "$threads"
